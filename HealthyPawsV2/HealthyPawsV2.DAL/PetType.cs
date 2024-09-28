@@ -13,13 +13,13 @@ namespace HealthyPawsV2.DAL
     public class PetType
     {
         [Key]
-        public int petTypeId { get; set; }  //This is the Pets ID. 
+        public int petTypeId { get; set; }  //This is the Pets ID.                  
 
         [DisplayName("Tipo de Animal")]
-        public string name { get; set; }
+        public string name { get; set; }    
 
         [DisplayName("Estado")]
-        public bool status { get; set; }
+        public bool status { get; set; }  
 
         public ICollection<PetBreed> PetBreeds { get; set; } = new List<PetBreed>();  // Collection related to the PetBreed Entity.
 

@@ -1,0 +1,73 @@
+﻿@model HealthyPawsV2.DAL.Appointment
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Appointment</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.petFile)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.petFile)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.vetId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.vetId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.status)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.diagnostic)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.diagnostic)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Additional)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Additional)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.owner)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.owner.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.document)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.document.category)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.AppointmentId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

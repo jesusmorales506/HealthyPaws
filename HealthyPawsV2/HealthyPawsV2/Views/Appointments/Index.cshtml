@@ -1,0 +1,84 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.Appointment>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.petFile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.vetId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.diagnostic)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Additional)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.owner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.document)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.petFile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.vetId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.diagnostic)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Additional)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.owner.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.document.category)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

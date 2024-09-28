@@ -4519,19 +4519,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jesus\\.nuget\\packages\\": {}
+    "C:\\Users\\porrasj\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Importante\\Materias U\\2024\\lllC2024\\Diseno-Desarrollo_de_Sistemas\\Proyecto\\Github-HealthyPaws\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\HealthyPawsV2.DAL.csproj",
+      "projectUniqueName": "C:\\Users\\porrasj\\OneDrive - Hewlett Packard Enterprise\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\HealthyPawsV2.DAL.csproj",
       "projectName": "HealthyPawsV2.DAL",
-      "projectPath": "D:\\Importante\\Materias U\\2024\\lllC2024\\Diseno-Desarrollo_de_Sistemas\\Proyecto\\Github-HealthyPaws\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\HealthyPawsV2.DAL.csproj",
-      "packagesPath": "C:\\Users\\jesus\\.nuget\\packages\\",
-      "outputPath": "D:\\Importante\\Materias U\\2024\\lllC2024\\Diseno-Desarrollo_de_Sistemas\\Proyecto\\Github-HealthyPaws\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\obj\\",
+      "projectPath": "C:\\Users\\porrasj\\OneDrive - Hewlett Packard Enterprise\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\HealthyPawsV2.DAL.csproj",
+      "packagesPath": "C:\\Users\\porrasj\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\porrasj\\OneDrive - Hewlett Packard Enterprise\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\jesus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\porrasj\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4608,7 +4613,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

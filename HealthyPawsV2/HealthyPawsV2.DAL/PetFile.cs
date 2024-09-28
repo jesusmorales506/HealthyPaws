@@ -38,9 +38,9 @@ namespace HealthyPawsV2.DAL
         public double weight { get; set; }
 
 
-        [DisplayName("Fecha de Creacion")]
+        [DisplayName("Fecha de Creación")]
         public DateTime creationDate { get; set; }
-        [DisplayName("Fecha de Creacion")]
+        [DisplayName("Fecha de Creación")]
         public string formattedCreationDate
         {
             get
