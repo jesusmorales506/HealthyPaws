@@ -57,3 +57,18 @@ C:\Users\alexa\Documents\GitHub\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\
 C:\Users\alexa\Documents\GitHub\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.pdb
 C:\Users\alexa\Documents\GitHub\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.genruntimeconfig.cache
 C:\Users\alexa\Documents\GitHub\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\ref\HealthyPawsV2.DAL.dll
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\bin\Debug\net8.0\HealthyPawsV2.DAL.deps.json
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\bin\Debug\net8.0\HealthyPawsV2.DAL.runtimeconfig.json
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\bin\Debug\net8.0\HealthyPawsV2.DAL.dll
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\bin\Debug\net8.0\HealthyPawsV2.DAL.pdb
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.csproj.AssemblyReference.cache
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.AssemblyInfoInputs.cache
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.AssemblyInfo.cs
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.csproj.CoreCompileInputs.cache
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.sourcelink.json
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.dll
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\refint\HealthyPawsV2.DAL.dll
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.pdb
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\HealthyPawsV2.DAL.genruntimeconfig.cache
+D:\Importante\Materias U\2024\lllC2024\Diseno-Desarrollo_de_Sistemas\Proyecto\Github-HealthyPaws\HealthyPaws\HealthyPawsV2\HealthyPawsV2.DAL\obj\Debug\net8.0\ref\HealthyPawsV2.DAL.dll

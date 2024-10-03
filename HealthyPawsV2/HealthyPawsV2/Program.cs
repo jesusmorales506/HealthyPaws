@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 //using HealthyPawsV2.Data;
 using HealthyPawsV2.DAL;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using HealthyPawsV2.DAL;
+
 
 //Conexion a Base de datos para uso de Identity / Usuarios y Roles
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AuthDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AuthDbContextConnection' not found.");
 builder.Services.AddDbContext<AuthContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<AuthContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<AuthContext>().AddDefaultUI();
+builder.Services.AddRazorPages();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllersWithViews();
 //Conexion a Base de datos para uso de Identity / Usuarios y Roles
@@ -37,6 +37,8 @@ else
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
