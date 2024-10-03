@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HealthyPawsV2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+007030efe8ba78815945d746b24b50981b325758")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c01984346b1397a3812573c9252f6bc633fdf492")]
 [assembly: System.Reflection.AssemblyProductAttribute("HealthyPawsV2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HealthyPawsV2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

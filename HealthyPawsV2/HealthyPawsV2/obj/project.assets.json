@@ -8186,19 +8186,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Katherine\\.nuget\\packages\\": {}
+    "C:\\Users\\alexa\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Katherine\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2\\HealthyPawsV2.csproj",
+      "projectUniqueName": "C:\\Users\\alexa\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2\\HealthyPawsV2.csproj",
       "projectName": "HealthyPawsV2",
-      "projectPath": "C:\\Users\\Katherine\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2\\HealthyPawsV2.csproj",
-      "packagesPath": "C:\\Users\\Katherine\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Katherine\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2\\obj\\",
+      "projectPath": "C:\\Users\\alexa\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2\\HealthyPawsV2.csproj",
+      "packagesPath": "C:\\Users\\alexa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\alexa\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Katherine\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\alexa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8213,8 +8218,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Katherine\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\HealthyPawsV2.DAL.csproj": {
-              "projectPath": "C:\\Users\\Katherine\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\HealthyPawsV2.DAL.csproj"
+            "C:\\Users\\alexa\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\HealthyPawsV2.DAL.csproj": {
+              "projectPath": "C:\\Users\\alexa\\Documents\\GitHub\\HealthyPaws\\HealthyPawsV2\\HealthyPawsV2.DAL\\HealthyPawsV2.DAL.csproj"
             }
           }
         }
