@@ -1,0 +1,80 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<div>
+    <h1 style="text-align: center">Nuestros Usuarios</h1>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">Añadir Usuarios</a>
+    </div>
+    <div class="col-md-3" style="margin-left: 250px">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="userSearch" name="userSearch" class="form-control" style="width: 300px;" />
+            </div>
+            <p></p>
+            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
+        </form>
+        <p></p>
+    </div>
+</div>
+
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}
+<br />
+<br />
+<div id="alertContainer" class="alert" style="display:none;"></div>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 card1">
+                    <div class="card-body">
+                        <h4 class="card-title">@Html.DisplayFor(modelItem => item.name)</h4>
+                        <p class="card-text">Apellidos: @Html.DisplayFor(modelItem => item.surnames)</p>
+                        <p class="card-text">Ultima Fecha de Conexion: @Html.DisplayFor(modelItem => item.lastConnection)</p>
+                        <p class="card-text">Correo: @Html.DisplayFor(modelItem => item.Email)</p>
+                        <p class="card-text">
+                            Estado:
+                            @if (item.status)
+                            {
+                                <span style="color: green;">Activo</span>
+                            }
+                            else
+                            {
+                                <span style="color: red;">Inactivo</span>
+                            }
+                        </p>
+
+                    </div>
+                    <div class="card-footer">
+                        <a asp-action="Edit" asp-route-id="@item.name" class="btn btn-primary">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.name" class="btn btn-secondary">Detalles</a>
+                        <a class="btn btn-danger BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.name">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

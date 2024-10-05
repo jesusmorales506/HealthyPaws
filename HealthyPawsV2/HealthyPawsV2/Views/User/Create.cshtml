@@ -1,0 +1,78 @@
+﻿ @model HealthyPawsV2.DAL.ApplicationUser
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Crear</h1>
+
+<h4>Usuario</h4>
+<hr />
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="surnames" class="control-label"></label>
+                <input asp-for="surnames" class="form-control" />
+                <span asp-validation-for="surnames" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="idType" class="control-label"></label>
+                <select asp-for="idType" class="form-control">
+                    <option value="Nacional">Nacional</option>
+                    <option value="Extranjero">Extranjero</option>
+                    <option value="Nacionalizado">Nacionalizado</option>
+                </select>
+                <span asp-validation-for="idType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="idNumber" class="control-label"></label>
+                <input asp-for="idNumber" class="form-control" />
+                <span asp-validation-for="idNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="phone1" class="control-label"></label>
+                <input asp-for="phone1" class="form-control" />
+                <span asp-validation-for="phone1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="phone2" class="control-label"></label>
+                <input asp-for="phone2" class="form-control" />
+                <span asp-validation-for="phone2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="phone3" class="control-label"></label>
+                <input asp-for="phone3" class="form-control" />
+                <span asp-validation-for="phone3" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+             <br />
+            <div class="form-group">
+                <br />
+                <input type="submit" value="Añadir" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div> 
+
+ @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+ } 
