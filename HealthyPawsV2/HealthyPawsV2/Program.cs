@@ -1,12 +1,10 @@
-//using HealthyPawsV2.Data;
+// using HealthyPawsV2.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-//using HealthyPawsV2.Data;
 using HealthyPawsV2.DAL;
+using System.Net.Http.Headers;
 
-
-//Conexion a Base de datos para uso de Identity / Usuarios y Roles
+// Conexión a Base de datos para uso de Identity / Usuarios y Roles
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AuthDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AuthDbContextConnection' not found.");
 builder.Services.AddDbContext<AuthContext>(options => options.UseSqlServer(connectionString));
@@ -14,16 +12,26 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
 builder.Services.AddRazorPages();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllersWithViews();
-//Conexion a Base de datos para uso de Identity / Usuarios y Roles
+// Conexión a Base de datos para uso de Identity / Usuarios y Roles
 
-
-//Inyeccion de Dependencias y Conexion a BD General con Entidades 
+// Inyección de Dependencias y Conexión a BD General con Entidades 
 builder.Services.AddDbContext<HPContext>(options => options.UseSqlServer("name=ConnHealthyDB"));
-//Inyeccion de Dependencias y Conexion a BD General con Entidades
+// Inyección de Dependencias y Conexión a BD General con Entidades
+
+// Configurar HttpClient para desactivar la validación SSL
+builder.Services.AddHttpClient<CedulasController>(client =>
+{
+    client.DefaultRequestHeaders.Accept.Clear();
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+}).ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+    };
+});
 
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

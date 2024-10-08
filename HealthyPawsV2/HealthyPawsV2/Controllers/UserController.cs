@@ -82,6 +82,11 @@ public class UserController : Controller
 
         usuario.lastConnection = DateTime.Now.Date + DateTime.Now.TimeOfDay;
 
+        if (string.IsNullOrEmpty(usuario.name) || string.IsNullOrEmpty(usuario.surnames))
+        {
+            ModelState.AddModelError("", "Los campos de Nombre y Apellidos son obligatorios.");
+            return View(usuario);
+        }
         //Creat password with following format: Alexa.C
         string password =  char.ToUpper(usuario.name[0]) + usuario.name.Substring(1).ToLower() + "." + char.ToUpper(usuario.surnames[0]);
         //hash the password
@@ -108,6 +113,8 @@ public class UserController : Controller
         //{
         //    mascota.DuenoId = usuarioLoggueado.Id;
         //}
+
+        
 
         if (ModelState.IsValid)
         {
