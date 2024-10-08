@@ -13,6 +13,7 @@ namespace HealthyPawsV2.DAL
     public class PetBreed
     {
         [Key]
+        [DisplayName("Id")]
         public int petBreedId { get; set; }
 
         [ForeignKey("PetType")]

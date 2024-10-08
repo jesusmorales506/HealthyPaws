@@ -19,10 +19,32 @@ namespace HealthyPawsV2.Controllers
         }
 
         // GET: PetFiles
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchPetFile)
         {
-            var hPContext = _context.PetFiles.Include(p => p.PetBreed);
-            return View(await hPContext.ToListAsync());
+
+            var pets = _context.PetFiles
+                .Include(p => p.dueno)
+                .Include(p => p.PetBreed)
+                .ThenInclude(b => b.PetType).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchPetFile))
+            {
+                int.TryParse(searchPetFile, out int parsedPetFileId);
+                pets = pets.Where(p => p.name.Contains(searchPetFile) || p.petFileId == parsedPetFileId);
+            }
+
+            var hpContext = await pets.ToListAsync();
+
+            if (hpContext.Count == 0)
+            {
+                ViewBag.NoResultados = true;
+            }
+            else
+            {
+                ViewBag.NoResultados = false;
+            }
+
+            return View(hpContext);
         }
 
         // GET: PetFiles/Details/5
@@ -35,7 +57,9 @@ namespace HealthyPawsV2.Controllers
 
             var petFile = await _context.PetFiles
                 .Include(p => p.PetBreed)
+                .Include(p => p.dueno)
                 .FirstOrDefaultAsync(m => m.petFileId == id);
+
             if (petFile == null)
             {
                 return NotFound();
@@ -48,16 +72,21 @@ namespace HealthyPawsV2.Controllers
         public IActionResult Create()
         {
             ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name");
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
+            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+
             return View();
         }
 
         // POST: PetFiles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("petFileId,petBreedId,idNumber,name,petTypeId,gender,age,weight,creationDate,vaccineHistory,castration,description,status")] PetFile petFile)
         {
+            petFile.creationDate = DateTime.Now.Date + DateTime.Now.TimeOfDay;
+            petFile.status = true;
+
             if (ModelState.IsValid)
             {
                 _context.Add(petFile);
@@ -65,6 +94,8 @@ namespace HealthyPawsV2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name", petFile.petBreedId);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.dueno);
+            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name", petFile.petTypeId);
             return View(petFile);
         }
 
@@ -82,12 +113,13 @@ namespace HealthyPawsV2.Controllers
                 return NotFound();
             }
             ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name", petFile.petBreedId);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.dueno);
+            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name", petFile.petTypeId);
             return View(petFile);
         }
 
         // POST: PetFiles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("petFileId,petBreedId,idNumber,name,petTypeId,gender,age,weight,creationDate,vaccineHistory,castration,description,status")] PetFile petFile)
@@ -101,63 +133,59 @@ namespace HealthyPawsV2.Controllers
             {
                 try
                 {
+                    var originalPetfile = await _context.PetFiles.AsNoTracking().FirstOrDefaultAsync(m => m.petFileId == id);
+
+                    petFile.creationDate = originalPetfile.creationDate;
+
                     _context.Update(petFile);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PetFileExists(petFile.petFileId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name", petFile.petBreedId);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.dueno);
+            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name", petFile.petTypeId);
             return View(petFile);
         }
 
         // GET: PetFiles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var petFile = await _context.PetFiles
-                .Include(p => p.PetBreed)
-                .FirstOrDefaultAsync(m => m.petFileId == id);
-            if (petFile == null)
-            {
-                return NotFound();
-            }
+                var petfile = await _context.PetFiles.FindAsync(id);
+                if (petfile == null)
+                {
+                    return NotFound();
+                }
 
-            return View(petFile);
+                petfile.status = false;
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: PetFiles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var petFile = await _context.PetFiles.FindAsync(id);
-            if (petFile != null)
+            var petfile = await _context.PetFiles.FindAsync(id);
+            if (petfile != null)
             {
-                _context.PetFiles.Remove(petFile);
+                petfile.status = false;
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PetFileExists(int id)
-        {
-            return _context.PetFiles.Any(e => e.petFileId == id);
         }
     }
 }

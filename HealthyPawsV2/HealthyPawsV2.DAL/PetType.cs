@@ -13,6 +13,7 @@ namespace HealthyPawsV2.DAL
     public class PetType
     {
         [Key]
+        [DisplayName("Id")]
         public int petTypeId { get; set; }  //This is the Pets ID.                  
 
         [DisplayName("Tipo de Animal")]

@@ -14,27 +14,29 @@ namespace HealthyPawsV2.DAL
     public class PetFile
     {
         [Key]
+        [DisplayName("Id Mascota")]
         public int petFileId { get; set; }
-
 
         [ForeignKey("PetBreed")]
         [DisplayName("Raza de Mascota")]
         public int petBreedId { get; set; }
 
-        [DisplayName("Nombre del Dueño")] 
-        
+        [DisplayName("Dueño")] 
         public string idNumber { get; set; }   
 
-
-        [DisplayName("Nombre de la Mascota")]
+        [DisplayName("Nombre de Mascota")]
         public string name { get; set; }
 
+        [DisplayName("Tipo de Mascota")]
         public int petTypeId { get; set; }
 
+        [DisplayName("Género")]
         public string gender { get; set; }
 
+        [DisplayName("Edad")]
         public int age { get; set; }
 
+        [DisplayName("Peso")]
         public double weight { get; set; }
 
 

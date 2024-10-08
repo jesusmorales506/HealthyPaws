@@ -19,9 +19,26 @@ namespace HealthyPawsV2.Controllers
         }
 
         // GET: PetTypes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchPetType)
         {
-            return View(await _context.PetTypes.ToListAsync());
+            var petType = _context.PetTypes.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchPetType))
+            {
+                petType = petType.Where(m => m.name.Contains(searchPetType));
+            }
+            var hpcontext = await petType.ToListAsync();
+
+            if (hpcontext.Count == 0)
+            {
+                ViewBag.NoResultados = true;
+            }
+            else
+            {
+                ViewBag.NoResultados = false;
+            }
+
+            return View(hpcontext);
         }
 
         // GET: PetTypes/Details/5
@@ -53,8 +70,9 @@ namespace HealthyPawsV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("petTypeId,name,status")] PetType petType)
+        public async Task<IActionResult> Create([Bind("petTypeId,name")] PetType petType)
         {
+            petType.status = true;
             if (ModelState.IsValid)
             {
                 _context.Add(petType);
@@ -123,15 +141,17 @@ namespace HealthyPawsV2.Controllers
                 return NotFound();
             }
 
-            var petType = await _context.PetTypes
-                .FirstOrDefaultAsync(m => m.petTypeId == id);
-            if (petType == null)
+            var PetType = await _context.PetTypes.FindAsync(id);
+            if (PetType == null)
             {
                 return NotFound();
             }
 
-            return View(petType);
+            PetType.status = false;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
 
         // POST: PetTypes/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -141,7 +161,7 @@ namespace HealthyPawsV2.Controllers
             var petType = await _context.PetTypes.FindAsync(id);
             if (petType != null)
             {
-                _context.PetTypes.Remove(petType);
+                petType.status = false;
             }
 
             await _context.SaveChangesAsync();

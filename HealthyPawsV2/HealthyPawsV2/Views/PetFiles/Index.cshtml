@@ -7,12 +7,28 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">Añadir Expediente Mascota</a>
+    </div>
+    <div class="col-md-3" style="margin-left: 250px">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchPetFile" name="searchPetFile" class="form-control" style="width: 300px;" />
+            </div>
+            <p></p>
+            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
+        </form>
+        <p></p>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.petFileId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.idNumber)
             </th>
@@ -21,6 +37,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.petTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.petBreedId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.gender)
@@ -32,12 +51,6 @@
                 @Html.DisplayNameFor(model => model.weight)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.creationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.vaccineHistory)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.castration)
             </th>
             <th>
@@ -47,14 +60,26 @@
                 @Html.DisplayNameFor(model => model.status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PetBreed)
+                @Html.DisplayNameFor(model => model.creationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.vaccineHistory)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
+        @if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}
+<br />
+<br />
 @foreach (var item in Model) {
         <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.petFileId)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.idNumber)
             </td>
@@ -62,7 +87,10 @@
                 @Html.DisplayFor(modelItem => item.name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.petTypeId)
+                @Html.DisplayFor(modelItem => item.PetBreed.PetType.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PetBreed.name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.gender)
@@ -74,12 +102,6 @@
                 @Html.DisplayFor(modelItem => item.weight)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.creationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.vaccineHistory)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.castration)
             </td>
             <td>
@@ -89,7 +111,10 @@
                 @Html.DisplayFor(modelItem => item.status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PetBreed.name)
+                @Html.DisplayFor(modelItem => item.creationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.vaccineHistory)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.petFileId">Edit</a> |

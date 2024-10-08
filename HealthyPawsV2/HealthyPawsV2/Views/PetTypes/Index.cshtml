@@ -7,12 +7,28 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">Añadir Tipo de Mascota</a>
+    </div>
+    <div class="col-md-3" style="margin-left: 250px">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchPetType" name="searchPetType" class="form-control" style="width: 300px;" />
+            </div>
+            <p></p>
+            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
+        </form>
+        <p></p>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.petTypeId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.name)
             </th>
@@ -23,20 +39,29 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.petTypeId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.petTypeId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.petTypeId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.petTypeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.petTypeId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.petTypeId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.petTypeId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}

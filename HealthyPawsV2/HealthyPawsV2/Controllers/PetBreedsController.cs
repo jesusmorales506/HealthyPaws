@@ -19,10 +19,27 @@ namespace HealthyPawsV2.Controllers
         }
 
         // GET: PetBreeds
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchPetBreed)
         {
-            var hPContext = _context.PetBreeds.Include(p => p.PetType);
-            return View(await hPContext.ToListAsync());
+            var PetBreed = _context.PetBreeds
+                .Include(r => r.PetType)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(searchPetBreed))
+            {
+                PetBreed = PetBreed.Where(m => m.name.Contains(searchPetBreed));
+            }
+            var hpContext = await PetBreed.ToListAsync();
+
+            if (hpContext.Count == 0)
+            {
+                ViewBag.NoResultados = true;
+            }
+            else
+            {
+                ViewBag.NoResultados = false;
+            }
+
+            return View(hpContext);
         }
 
         // GET: PetBreeds/Details/5
@@ -58,6 +75,7 @@ namespace HealthyPawsV2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("petBreedId,petTypeId,name,status")] PetBreed petBreed)
         {
+            petBreed.status = true;
             if (ModelState.IsValid)
             {
                 _context.Add(petBreed);
@@ -148,10 +166,9 @@ namespace HealthyPawsV2.Controllers
             var petBreed = await _context.PetBreeds.FindAsync(id);
             if (petBreed != null)
             {
-                _context.PetBreeds.Remove(petBreed);
+                petBreed.status = false;
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
