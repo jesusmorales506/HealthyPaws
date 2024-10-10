@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
+using Microsoft.AspNetCore.Identity;
 
 namespace HealthyPawsV2.Controllers
 {
@@ -19,11 +20,32 @@ namespace HealthyPawsV2.Controllers
         }
 
         // GET: Appointments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchAppointment)
         {
-            var hPContext = _context.Appointments.Include(a => a.document).Include(a => a.owner);
-            return View(await hPContext.ToListAsync());
+            var appointments = _context.Appointments
+                .Include(a => a.petId)
+                .Include(a => a.owner)
+                .Include(a => a.veterinario)
+                .Include(a => a.document)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchAppointment))
+            {
+                appointments = appointments.Where(a =>
+                    a.AppointmentId.ToString().Contains(searchAppointment) ||
+                    a.petId.name.Contains(searchAppointment) ||
+                    a.owner.UserName.Contains(searchAppointment) ||
+                    a.veterinario.UserName.Contains(searchAppointment)
+                );
+            }
+
+            var appointmentList = await appointments.ToListAsync();
+
+            ViewBag.NoResultados = appointmentList.Count == 0;
+
+            return View(appointmentList);
         }
+
 
         // GET: Appointments/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -34,9 +56,12 @@ namespace HealthyPawsV2.Controllers
             }
 
             var appointment = await _context.Appointments
-                .Include(a => a.document)
+                .Include(a => a.petId)
                 .Include(a => a.owner)
+                .Include(a => a.veterinario)
+                .Include(a => a.document)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
+
             if (appointment == null)
             {
                 return NotFound();
@@ -48,8 +73,9 @@ namespace HealthyPawsV2.Controllers
         // GET: Appointments/Create
         public IActionResult Create()
         {
-            ViewData["documentId"] = new SelectList(_context.Documents, "documentId", "category");
-            ViewData["ownerId"] = new SelectList(_context.ApplicationUser, "Id", "Id");
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
+            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "name", "name");
             return View();
         }
 
@@ -66,8 +92,8 @@ namespace HealthyPawsV2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["documentId"] = new SelectList(_context.Documents, "documentId", "category", appointment.documentId);
-            ViewData["ownerId"] = new SelectList(_context.ApplicationUser, "Id", "Id", appointment.ownerId);
+            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View(appointment);
         }
 
@@ -84,8 +110,8 @@ namespace HealthyPawsV2.Controllers
             {
                 return NotFound();
             }
-            ViewData["documentId"] = new SelectList(_context.Documents, "documentId", "category", appointment.documentId);
-            ViewData["ownerId"] = new SelectList(_context.ApplicationUser, "Id", "Id", appointment.ownerId);
+            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View(appointment);
         }
 
@@ -121,8 +147,8 @@ namespace HealthyPawsV2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["documentId"] = new SelectList(_context.Documents, "documentId", "category", appointment.documentId);
-            ViewData["ownerId"] = new SelectList(_context.ApplicationUser, "Id", "Id", appointment.ownerId);
+            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View(appointment);
         }
 
@@ -135,8 +161,10 @@ namespace HealthyPawsV2.Controllers
             }
 
             var appointment = await _context.Appointments
-                .Include(a => a.document)
+                .Include(a => a.petId)
                 .Include(a => a.owner)
+                .Include(a => a.veterinario)
+                .Include(a => a.document)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
             if (appointment == null)
             {
@@ -154,7 +182,8 @@ namespace HealthyPawsV2.Controllers
             var appointment = await _context.Appointments.FindAsync(id);
             if (appointment != null)
             {
-                _context.Appointments.Remove(appointment);
+                appointment.status = "Cancelada";
+                _context.Appointments.Update(appointment);
             }
 
             await _context.SaveChangesAsync();

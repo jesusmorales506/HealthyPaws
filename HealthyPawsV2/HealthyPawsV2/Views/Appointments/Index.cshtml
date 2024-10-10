@@ -7,9 +7,22 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">Añadir Cita</a>
+    </div>
+    <div class="col-md-3" style="margin-left: 250px">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchPetType" name="searchPetType" class="form-control" style="width: 300px;" />
+            </div>
+            <p></p>
+            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
+        </form>
+        <p></p>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -82,3 +95,8 @@
 }
     </tbody>
 </table>
+
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}

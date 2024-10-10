@@ -17,15 +17,15 @@ namespace HealthyPawsV2.DAL
 
         [ForeignKey("PetFile")]
         [Required]
-        [DisplayName("Id de Mascota")]
+        [DisplayName("Nombre de Mascota")]
         public int petFile { get; set; }
 
         [Required]
-        [DisplayName("ID de Veterinario")]
+        [DisplayName("Nombre de Veterinario")]
         public string vetId { get; set; }
 
         [Required]
-        [DisplayName("Id de Cliente")]
+        [DisplayName("Nombre de Cliente")]
         public string ownerId { get; set; }
 
         [ForeignKey("Document")]
