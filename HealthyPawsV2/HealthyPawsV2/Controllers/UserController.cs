@@ -38,13 +38,13 @@ public class UserController : Controller
             return NotFound();
         }
 
-        var usuario = await _userManager.FindByIdAsync(id);
-        if (usuario == null)
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
         {
             return NotFound();
         }
 
-        return View(usuario);
+        return View(user);
     }
 
     // GET: Usuarios/Create
