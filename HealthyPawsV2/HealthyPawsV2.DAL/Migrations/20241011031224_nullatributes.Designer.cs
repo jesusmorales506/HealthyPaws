@@ -4,6 +4,7 @@ using HealthyPawsV2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthyPawsV2.DAL.Migrations
 {
     [DbContext(typeof(HPContext))]
-    partial class HPContextModelSnapshot : ModelSnapshot
+    [Migration("20241011031224_nullatributes")]
+    partial class nullatributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,6 +165,9 @@ namespace HealthyPawsV2.DAL.Migrations
                     b.Property<string>("diagnostic")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("documentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ownerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -183,6 +189,8 @@ namespace HealthyPawsV2.DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("AppointmentId");
+
+                    b.HasIndex("documentId");
 
                     b.HasIndex("ownerId");
 
@@ -230,8 +238,8 @@ namespace HealthyPawsV2.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("documentId"));
 
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("appointmentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("category")
                         .HasColumnType("nvarchar(max)");
@@ -243,15 +251,10 @@ namespace HealthyPawsV2.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("petFileId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("status")
                         .HasColumnType("bit");
 
                     b.HasKey("documentId");
-
-                    b.HasIndex("petFileId");
 
                     b.ToTable("Document");
                 });
@@ -439,6 +442,12 @@ namespace HealthyPawsV2.DAL.Migrations
 
             modelBuilder.Entity("HealthyPawsV2.DAL.Appointment", b =>
                 {
+                    b.HasOne("HealthyPawsV2.DAL.Document", "document")
+                        .WithMany("Appointments")
+                        .HasForeignKey("documentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HealthyPawsV2.DAL.ApplicationUser", "owner")
                         .WithMany()
                         .HasForeignKey("ownerId")
@@ -452,6 +461,8 @@ namespace HealthyPawsV2.DAL.Migrations
                     b.HasOne("HealthyPawsV2.DAL.ApplicationUser", "veterinario")
                         .WithMany()
                         .HasForeignKey("veterinarioId");
+
+                    b.Navigation("document");
 
                     b.Navigation("owner");
 
@@ -477,17 +488,6 @@ namespace HealthyPawsV2.DAL.Migrations
                     b.Navigation("Appointment");
 
                     b.Navigation("Inventory");
-                });
-
-            modelBuilder.Entity("HealthyPawsV2.DAL.Document", b =>
-                {
-                    b.HasOne("HealthyPawsV2.DAL.PetFile", "PetFile")
-                        .WithMany("Documents")
-                        .HasForeignKey("petFileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PetFile");
                 });
 
             modelBuilder.Entity("HealthyPawsV2.DAL.LogReport", b =>
@@ -537,6 +537,11 @@ namespace HealthyPawsV2.DAL.Migrations
                     b.Navigation("AppointmentInventories");
                 });
 
+            modelBuilder.Entity("HealthyPawsV2.DAL.Document", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
             modelBuilder.Entity("HealthyPawsV2.DAL.Inventory", b =>
                 {
                     b.Navigation("AppointmentInventories");
@@ -550,8 +555,6 @@ namespace HealthyPawsV2.DAL.Migrations
             modelBuilder.Entity("HealthyPawsV2.DAL.PetFile", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("Documents");
                 });
 
             modelBuilder.Entity("HealthyPawsV2.DAL.PetType", b =>

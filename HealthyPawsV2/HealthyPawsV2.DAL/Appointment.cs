@@ -21,17 +21,12 @@ namespace HealthyPawsV2.DAL
         public int petFile { get; set; }
 
         [Required]
-        [DisplayName("Nombre de Veterinario")]
+        [DisplayName("ID de Veterinario")]
         public string vetId { get; set; }
 
         [Required]
         [DisplayName("Nombre de Cliente")]
         public string ownerId { get; set; }
-
-        [ForeignKey("Document")]
-        [Required]
-        [DisplayName("Id de Documento")]
-        public int documentId { get; set; }
 
         public DateTime Date {get; set; }
 
@@ -42,7 +37,7 @@ namespace HealthyPawsV2.DAL
         public string status { get; set; }
 
 
-        [DisplayName("Diagnostico")]
+        [DisplayName("Diagnóstico")]
         public string diagnostic { get; set; }
 
         [DisplayName("Observaciones Adicionales")]
@@ -55,19 +50,7 @@ namespace HealthyPawsV2.DAL
 
         public ApplicationUser? veterinario { get; set; }
 
-        public Document? document { get; set; }
-
         public ICollection<AppointmentInventory> AppointmentInventories { get; set; } = new List<AppointmentInventory>();
-
-
-
-
-
-
-
-
-
-
 
 
     }

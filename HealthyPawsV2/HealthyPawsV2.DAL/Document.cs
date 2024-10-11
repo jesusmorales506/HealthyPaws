@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -17,33 +16,29 @@ namespace HealthyPawsV2.DAL
         [Required]
         public int documentId { get; set; }
 
-        [ForeignKey("Appointment")]
+        [ForeignKey("PetFile")]
         [Required]
-        [DisplayName("Número de Cita")]
-        public int appointmentId { get; set; }
+        [DisplayName("Número de Expediente Asociado")]
+        public int petFileId { get; set; }
 
         [Required]
         [DisplayName("Nombre")]
         public string name { get; set; }
 
-
         [DisplayName("Categoria")]
         public string category { get; set; }
 
-        [Required]
         [DisplayName("Tipo de Archivo")]
         public byte fileType { get; set; }
+
+        [DisplayName("Fecha de Creación")]
+        public DateTime FechaCreacion { get; set; }
 
         [DisplayName("Estado")]
         public bool status { get; set; }
 
-        //ICollection
-        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-
-
-
-
-
+        //Relacion con entidad PetFile
+        public PetFile? PetFile { get; set; }
 
     }
 }

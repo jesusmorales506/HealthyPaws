@@ -72,11 +72,7 @@ namespace HealthyPawsV2.DAL
 
         //ICollection
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-
-
-
-
-
+        public ICollection<Document> Documents { get; set; } = new List<Document>();
 
 
     }

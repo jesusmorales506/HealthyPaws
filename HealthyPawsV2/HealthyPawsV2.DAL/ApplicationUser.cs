@@ -41,18 +41,17 @@ public class ApplicationUser : IdentityUser
     [DisplayName("Telefono 1")]
     public string phone1 { get; set; }
 
-    [Required]
+ 
     [MaxLength(12)]
     [DisplayName("Telefono 2")]
     public string phone2 { get; set; }
 
-    [Required]
     [MaxLength(12)]
     [DisplayName("Telefono 3")]
     public string phone3 { get; set; }
 
-    [ForeignKey("Direccion")]
-    [DisplayName("Direccion")]
+    [ForeignKey("Address")]
+    [DisplayName("Dirección")]
     public int addressId { get; set; }   //Foreign Key para jalar las direcciones
 
     [Required]

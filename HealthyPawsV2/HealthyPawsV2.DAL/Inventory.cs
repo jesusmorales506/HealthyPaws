@@ -20,18 +20,14 @@ namespace HealthyPawsV2.DAL
         [DisplayName("Nombre")]
         public string name { get; set; }
 
-
         [DisplayName("Categoria")]
         public string category { get; set; }
 
-        [Required]
         [DisplayName("Marca")]
         public string brand { get; set; }
 
-        [Required]
         [DisplayName("Cantidad Disponible")]
         public int availableStock { get; set; }
-
 
         [DisplayName("Descripción")]
         public string description { get; set; }
@@ -39,7 +35,6 @@ namespace HealthyPawsV2.DAL
         [Required]
         [DisplayName("Precio")]
         public double price { get; set; }
-
 
         [DisplayName("Proveedor")]
         public double provider { get; set; }

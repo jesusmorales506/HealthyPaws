@@ -13,10 +13,12 @@ namespace HealthyPawsV2.Controllers
     public class AppointmentsController : Controller
     {
         private readonly HPContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AppointmentsController(HPContext context)
+        public AppointmentsController(HPContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Appointments
@@ -25,9 +27,9 @@ namespace HealthyPawsV2.Controllers
             var appointments = _context.Appointments
                 .Include(a => a.petId)
                 .Include(a => a.owner)
-                .Include(a => a.veterinario)
-                .Include(a => a.document)
                 .AsQueryable();
+
+   
 
             if (!string.IsNullOrEmpty(searchAppointment))
             {
@@ -58,8 +60,6 @@ namespace HealthyPawsV2.Controllers
             var appointment = await _context.Appointments
                 .Include(a => a.petId)
                 .Include(a => a.owner)
-                .Include(a => a.veterinario)
-                .Include(a => a.document)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
 
             if (appointment == null)
@@ -75,7 +75,7 @@ namespace HealthyPawsV2.Controllers
         {
             ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
             ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
-            ViewData["Users"] = new SelectList(_context.ApplicationUser, "name", "name");
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View();
         }
 
@@ -84,7 +84,7 @@ namespace HealthyPawsV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,petFile,vetId,ownerId,documentId,Date,description,status,diagnostic,Additional")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("AppointmentId,petFile,vetId,ownerId,Date,description,status,diagnostic,Additional")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
@@ -163,8 +163,6 @@ namespace HealthyPawsV2.Controllers
             var appointment = await _context.Appointments
                 .Include(a => a.petId)
                 .Include(a => a.owner)
-                .Include(a => a.veterinario)
-                .Include(a => a.document)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
             if (appointment == null)
             {
