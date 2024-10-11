@@ -77,23 +77,24 @@ public class UserController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create([Bind("name,surnames,lastConnection,idType,idNumber,phone1,phone2,phone3,Email,addressId")] ApplicationUser usuario)
+    public async Task<IActionResult> Create([Bind("name,surnames,lastConnection,idType,idNumber,phone1,phone2,phone3,Email")] ApplicationUser usuario, string provinceName, string cantonName, string districtName)
     {
-
+        //We get the last connection of the user
         usuario.lastConnection = DateTime.Now.Date + DateTime.Now.TimeOfDay;
 
+        //This is a Validation to know if the user is adding the Name and Surnames
         if (string.IsNullOrEmpty(usuario.name) || string.IsNullOrEmpty(usuario.surnames))
         {
             ModelState.AddModelError("", "Los campos de Nombre y Apellidos son obligatorios.");
             return View(usuario);
         }
+
         //Creat password with following format: Alexa.C
         string password =  char.ToUpper(usuario.name[0]) + usuario.name.Substring(1).ToLower() + "." + char.ToUpper(usuario.surnames[0]);
         //hash the password
         string hashedPassword = PasswordUtility.HashPassword(usuario, password);
         usuario.PasswordHash = hashedPassword;
 
-        usuario.addressId = 1;
         usuario.status = true;
         usuario.UserName = usuario.Email;
         usuario.NormalizedUserName = usuario.Email.ToUpper();
@@ -114,18 +115,30 @@ public class UserController : Controller
         //    mascota.DuenoId = usuarioLoggueado.Id;
         //}
 
-        
-
         if (ModelState.IsValid)
         {
+            var address = new Address
+            {
+                province = provinceName, 
+                canton = cantonName,     
+                district = districtName   
+            };
+
+            //Lines 131/132/133 are creating the addresses and adding them to btoh tables Addresses and Users.
+            _context.Addresses.Add(address);
+            await _context.SaveChangesAsync();
+            usuario.addressId = address.AddressId;
+
             _context.ApplicationUser.Add(usuario);
             _context.SaveChanges();
             
             return RedirectToAction(nameof(Index));
         }
+
         //ViewData["IdRazaMascota"] = new SelectList(_context.RazaMascotas, "IdRazaMascota", "Nombre", mascota.IdRazaMascota);
         //ViewData["Usuarios"] = new SelectList(_context.ApplicationUser, "Id", "Nombre", mascota.UsuarioCreacionId);
         //ViewData["TiposMascota"] = new SelectList(_context.TipoMascotas, "IdTipoMascota", "Nombre", mascota.IdTipoMascota);
+
         return View(usuario);
     }
 

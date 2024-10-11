@@ -58,6 +58,11 @@ public class ApplicationUser : IdentityUser
     [DefaultValue(true)]
     public bool status { get; set; }
 
+
+    public string province { get; set; }
+    public string canton { get; set; }
+    public string district { get; set; }
+
     //public Direccion? Direccion { get; set; }  // Jalar direccion del usuario
 
 
