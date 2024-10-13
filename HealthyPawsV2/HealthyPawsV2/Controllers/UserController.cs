@@ -89,8 +89,8 @@ public class UserController : Controller
             return View(usuario);
         }
 
-        //Creat password with following format: Alexa.C
-        string password =  char.ToUpper(usuario.name[0]) + usuario.name.Substring(1).ToLower() + "." + char.ToUpper(usuario.surnames[0]);
+        //Create password with following format: Ale.c123
+        string password =  char.ToUpper(usuario.name[0]) + usuario.name.Substring(1, 2).ToLower() + "." + char.ToLower(usuario.surnames[0]) + "123";
         //hash the password
         string hashedPassword = PasswordUtility.HashPassword(usuario, password);
         usuario.PasswordHash = hashedPassword;
