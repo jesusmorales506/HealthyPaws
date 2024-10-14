@@ -50,9 +50,23 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+
+//Code to enter to Login Page - Parrt 1
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
+
 app.MapRazorPages();
+
+//Code to enter to Login Page - Parrt 2
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGet("/", context =>
+    {
+        context.Response.Redirect("/Identity/Account/Login");
+        return Task.CompletedTask;
+    });
+});
+
 
 app.Run();
