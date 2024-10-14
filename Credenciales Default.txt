@@ -1,0 +1,7 @@
+Login:
+
+Usuario: correo
+
+Contrasenas por Default: Primeras 3 letras nombre con mayuscula al inicio (Ale) + . + Primera letra apellido minuscula + 123
+
+Ej: Ale.c123
