@@ -14,6 +14,7 @@ namespace HealthyPawsV2.DAL
     {
         [Key]
         [Required]
+        [DisplayName("Id")]
         public int inventoryId { get; set; }
 
         [Required]
@@ -37,7 +38,7 @@ namespace HealthyPawsV2.DAL
         public double price { get; set; }
 
         [DisplayName("Proveedor")]
-        public double provider { get; set; }
+        public string provider { get; set; }
 
 
         [DisplayName("Contacto de Proveedor")]

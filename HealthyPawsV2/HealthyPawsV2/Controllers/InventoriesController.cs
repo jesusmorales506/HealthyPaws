@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
+using System.Drawing;
 
 namespace HealthyPawsV2.Controllers
 {
@@ -19,9 +20,30 @@ namespace HealthyPawsV2.Controllers
         }
 
         // GET: Inventories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchInventory)
         {
-            return View(await _context.Inventories.ToListAsync());
+            var inventaries =  _context.Inventories.AsQueryable();
+            //       ViewData["inventarios"] = inventarios;
+
+            if (!string.IsNullOrEmpty(searchInventory))
+            {
+                int.TryParse(searchInventory, out int parseditemId);
+                inventaries = inventaries.Where(p => p.name.Contains(searchInventory) || p.inventoryId == parseditemId);
+            }
+            var hpContext = await inventaries.ToListAsync();
+
+            if (hpContext.Count == 0)
+            {
+                ViewBag.NoResultados = true;
+            }
+            else
+            {
+                ViewBag.NoResultados = false;
+            }
+
+            return View(hpContext);
+
+
         }
 
         // GET: Inventories/Details/5
@@ -49,12 +71,12 @@ namespace HealthyPawsV2.Controllers
         }
 
         // POST: Inventories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("inventoryId,name,category,brand,availableStock,description,price,provider,providerInfo,State")] Inventory inventory)
         {
+            inventory.State = true; 
+
             if (ModelState.IsValid)
             {
                 _context.Add(inventory);
@@ -81,8 +103,6 @@ namespace HealthyPawsV2.Controllers
         }
 
         // POST: Inventories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("inventoryId,name,category,brand,availableStock,description,price,provider,providerInfo,State")] Inventory inventory)
@@ -101,14 +121,7 @@ namespace HealthyPawsV2.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InventoryExists(inventory.inventoryId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                        return NotFound(); 
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -123,34 +136,31 @@ namespace HealthyPawsV2.Controllers
                 return NotFound();
             }
 
-            var inventory = await _context.Inventories
-                .FirstOrDefaultAsync(m => m.inventoryId == id);
+            var inventory = await _context.Inventories.FindAsync(id);
             if (inventory == null)
             {
                 return NotFound();
             }
 
-            return View(inventory);
+            inventory.State = false;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Inventories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete (int id)
         {
-            var inventory = await _context.Inventories.FindAsync(id);
-            if (inventory != null)
             {
-                _context.Inventories.Remove(inventory);
+                var inventory = await _context.Inventories.FindAsync(id);
+                if (inventory != null)
+                {
+                    inventory.State = false;
+                }
+
+                return RedirectToAction(nameof(Index));
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool InventoryExists(int id)
-        {
-            return _context.Inventories.Any(e => e.inventoryId == id);
         }
     }
 }

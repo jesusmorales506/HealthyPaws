@@ -68,60 +68,61 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        @if ((bool)ViewBag.NoResultados)
+    <tbody>       
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.petFileId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.dueno.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PetBreed.PetType.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PetBreed.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.age)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.weight)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.castration)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.creationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.vaccineHistory)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.petFileId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.petFileId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.petFileId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if ((bool)ViewBag.NoResultados)
 {
     <p>No se encuentran resultados de búsqueda.</p>
 }
 <br />
 <br />
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                    @Html.DisplayFor(modelItem => item.petFileId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.idNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PetBreed.PetType.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PetBreed.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.age)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.weight)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.castration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.creationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.vaccineHistory)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.petFileId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.petFileId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.petFileId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>

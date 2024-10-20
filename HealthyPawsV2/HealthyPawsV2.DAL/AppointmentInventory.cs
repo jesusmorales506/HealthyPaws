@@ -23,7 +23,7 @@ namespace HealthyPawsV2.DAL
 
         [ForeignKey("Inventory")]
         [Required]
-        [DisplayName("ID de Inventario")]
+        [DisplayName("Medicamento")]
         public int inventoryID { get; set; }
 
         [DisplayName("Dosis")]

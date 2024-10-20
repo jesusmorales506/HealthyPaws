@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
+using Microsoft.AspNetCore.Identity;
 
 namespace HealthyPawsV2.Controllers
 {
     public class PetFilesController : Controller
     {
         private readonly HPContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PetFilesController(HPContext context)
+        public PetFilesController(HPContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: PetFiles
