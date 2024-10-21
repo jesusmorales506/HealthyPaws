@@ -18,11 +18,11 @@ namespace HealthyPawsV2.DAL
 
         [ForeignKey("PetFile")]
         [Required]
-        [DisplayName("Número de Expediente Asociado")]
+        [DisplayName("ID de la Mascota")]
         public int petFileId { get; set; }
 
         [Required]
-        [DisplayName("Nombre")]
+        [DisplayName("Nombre del Documento/Examen")]
         public string name { get; set; }
 
         [DisplayName("Categoria")]

@@ -17,7 +17,7 @@ namespace HealthyPawsV2.DAL
 
         [ForeignKey("PetFile")]
         [Required]
-        [DisplayName("Nombre de Mascota")]
+        [DisplayName("ID de Mascota")]
         public int petFile { get; set; }
 
         [Required]

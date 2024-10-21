@@ -74,7 +74,6 @@ namespace HealthyPawsV2.Controllers
         public IActionResult Create()
         {
             ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
-            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View();
         }
@@ -92,7 +91,7 @@ namespace HealthyPawsV2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View(appointment);
         }
@@ -110,7 +109,7 @@ namespace HealthyPawsV2.Controllers
             {
                 return NotFound();
             }
-            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View(appointment);
         }
@@ -147,7 +146,7 @@ namespace HealthyPawsV2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View(appointment);
         }

@@ -45,6 +45,8 @@ namespace HealthyPawsV2.Controllers
         // GET: Documents/Create
         public IActionResult Create()
         {
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "petFileId");
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
             return View();
         }
 
@@ -53,7 +55,7 @@ namespace HealthyPawsV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("documentId,appointmentId,name,category,fileType,status")] Document document)
+        public async Task<IActionResult> Create([Bind("documentId,petFileId,name,category,fileType,status")] Document document)
         {
             if (ModelState.IsValid)
             {
@@ -61,6 +63,11 @@ namespace HealthyPawsV2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Volver a llenar el ViewData en caso de error de validación
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "petFileId", document.petFileId);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
+
             return View(document);
         }
 
@@ -77,6 +84,10 @@ namespace HealthyPawsV2.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "petFileId", document.petFileId);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
+
             return View(document);
         }
 
@@ -85,7 +96,7 @@ namespace HealthyPawsV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("documentId,appointmentId,name,category,fileType,status")] Document document)
+        public async Task<IActionResult> Edit(int id, [Bind("documentId,petFileId,name,category,fileType,status")] Document document)
         {
             if (id != document.documentId)
             {
@@ -112,6 +123,11 @@ namespace HealthyPawsV2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            // Volver a llenar ViewData en caso de error de validación
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "petFileId", document.petFileId);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
+
             return View(document);
         }
 
