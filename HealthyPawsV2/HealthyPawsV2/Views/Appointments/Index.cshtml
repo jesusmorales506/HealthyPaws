@@ -7,6 +7,18 @@
 
 <h1>Index</h1>
 
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<div>
+    <h1 style="text-align: center">Módulo de Citas</h1>
+</div>
+
 <div class="row">
     <div class="col-md-6">
         <a asp-action="Create" class="btn btn-primary">Añadir Cita</a>
@@ -26,6 +38,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.petFile)
             </th>
@@ -57,6 +72,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.AppointmentId)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.petFile)
             </td>
             <td>
@@ -81,9 +99,9 @@
                 @Html.DisplayFor(modelItem => item.Additional)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm">Editar</a>
+                <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm">Detalles</a>
+                <a asp-action="Delete" asp-route-id="@item.AppointmentId" class="btn btn-danger btn-sm BorrarElemento">Eliminar</a>
             </td>
         </tr>
 }

@@ -13,11 +13,12 @@ namespace HealthyPawsV2.DAL
     public class Appointment
     {
         [Key]
+        [DisplayName("ID Cita")]
         public int AppointmentId { get; set; }
 
         [ForeignKey("PetFile")]
         [Required]
-        [DisplayName("ID de Mascota")]
+        [DisplayName("ID Mascota")]
         public int petFile { get; set; }
 
         [Required]
@@ -28,6 +29,7 @@ namespace HealthyPawsV2.DAL
         [DisplayName("Nombre de Cliente")]
         public string ownerId { get; set; }
 
+        [DisplayName("Fecha de la Cita")]
         public DateTime Date {get; set; }
 
         [DisplayName("Descripción")]
@@ -51,7 +53,7 @@ namespace HealthyPawsV2.DAL
         public ApplicationUser? veterinario { get; set; }
 
         public ICollection<AppointmentInventory> AppointmentInventories { get; set; } = new List<AppointmentInventory>();
-
+        public ICollection<Document> Documents { get; set; } = new List<Document>();
 
     }
 }

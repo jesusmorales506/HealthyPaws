@@ -21,6 +21,11 @@ namespace HealthyPawsV2.DAL
         [DisplayName("ID de la Mascota")]
         public int petFileId { get; set; }
 
+        [ForeignKey("Appointment")]
+        [Required]
+        [DisplayName("ID de la Cita")]
+        public int AppointmentId { get; set; }
+
         [Required]
         [DisplayName("Nombre del Documento/Examen")]
         public string name { get; set; }
@@ -39,6 +44,9 @@ namespace HealthyPawsV2.DAL
 
         //Relacion con entidad PetFile
         public PetFile? PetFile { get; set; }
+
+        //Relacion con entidad Appointment
+        public Appointment? Appointment { get; set; }
 
     }
 }

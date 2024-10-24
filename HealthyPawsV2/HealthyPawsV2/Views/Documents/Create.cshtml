@@ -5,49 +5,65 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h1>Crear</h1>
 
-<h4>Document</h4>
+<h4>Documento</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+
+<div class="card">
+    <div class="card-body">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="petFileId" class="control-label card-subtitle"></label>
-                <select asp-for="petFileId" class="form-control" asp-items="ViewBag.petFileId"></select>
+                <label asp-for="AppointmentId" class="control-label"></label>
+                <select asp-for="AppointmentId" class="form-control" asp-items="ViewBag.AppointmentId"></select>
+                <span asp-validation-for="AppointmentId" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="petFileId" class="control-label"></label>
+                <select asp-for="petFileId" class="form-control" asp-items="ViewBag.petFileId"></select>
+                <span asp-validation-for="petFileId" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="name" class="control-label"></label>
                 <input asp-for="name" class="form-control" />
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="category" class="control-label"></label>
                 <input asp-for="category" class="form-control" />
                 <span asp-validation-for="category" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="fileType" class="control-label"></label>
                 <input asp-for="fileType" class="form-control" />
                 <span asp-validation-for="fileType" class="text-danger"></span>
             </div>
+
             <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="status" /> @Html.DisplayNameFor(model => model.status)
-                </label>
+                <input class="form-check-input" asp-for="status" />
+                <label class="form-check-label" asp-for="status">@Html.DisplayNameFor(model => model.status)</label>
+                <span asp-validation-for="status" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Crear" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

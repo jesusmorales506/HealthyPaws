@@ -1,70 +1,87 @@
 ﻿@model HealthyPawsV2.DAL.Appointment
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Cita";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<div class="card">
+    <div class="card-header">
+        <h1>Editar Cita</h1>
+    </div>
 
-<h4>Appointment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    <div class="card-body">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="AppointmentId" />
+
+            <div class="form-group">
+                <label asp-for="AppointmentId" class="control-label"></label>
+                <input asp-for="AppointmentId" class="form-control" readonly />
+                <span asp-validation-for="AppointmentId" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="petFile" class="control-label"></label>
-                <input asp-for="petFile" class="form-control" />
+                <input asp-for="petFile" class="form-control" readonly />
                 <span asp-validation-for="petFile" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="vetId" class="control-label"></label>
                 <input asp-for="vetId" class="form-control" />
                 <span asp-validation-for="vetId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="ownerId" class="control-label"></label>
                 <select asp-for="ownerId" class="form-control" asp-items="ViewBag.Users"></select>
                 <span asp-validation-for="ownerId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="description" class="control-label"></label>
                 <input asp-for="description" class="form-control" />
                 <span asp-validation-for="description" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="status" class="control-label"></label>
-                <input asp-for="status" class="form-control" />
+                <select asp-for="status" class="form-control" asp-items="ViewBag.StatusOptions"></select>
                 <span asp-validation-for="status" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="diagnostic" class="control-label"></label>
                 <input asp-for="diagnostic" class="form-control" />
                 <span asp-validation-for="diagnostic" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Additional" class="control-label"></label>
-                <input asp-for="Additional" class="form-control" />
+                <textarea asp-for="Additional" class="form-control"></textarea>
                 <span asp-validation-for="Additional" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

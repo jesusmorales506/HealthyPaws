@@ -1,55 +1,86 @@
 ﻿@model HealthyPawsV2.DAL.Document
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
-<h4>Document</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Documento</h5>
+        <hr />
+
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="documentId" />
-            <div class="form-group">
-                <label asp-for="petFileId" class="control-label"></label>
-                <input asp-for="petFileId" class="form-control" />
-                <span asp-validation-for="petFileId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="name" class="control-label"></label>
-                <input asp-for="name" class="form-control" />
-                <span asp-validation-for="name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="category" class="control-label"></label>
-                <input asp-for="category" class="form-control" />
-                <span asp-validation-for="category" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="fileType" class="control-label"></label>
-                <input asp-for="fileType" class="form-control" />
-                <span asp-validation-for="fileType" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="status" /> @Html.DisplayNameFor(model => model.status)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.petFileId)
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="petFileId" class="form-control" readonly />
+                    <span asp-validation-for="petFileId" class="text-danger"></span>
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.AppointmentId)
+                </dt>
+                <dd class="col-sm-9">
+                    <select asp-for="AppointmentId" class="form-control" asp-items="ViewBag.AppointmentId"></select>
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.name)
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="name" class="form-control" />
+                    <span asp-validation-for="name" class="text-danger"></span>
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.category)
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="category" class="form-control" />
+                    <span asp-validation-for="category" class="text-danger"></span>
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.fileType)
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="fileType" class="form-control" />
+                    <span asp-validation-for="fileType" class="text-danger"></span>
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.status)
+                </dt>
+                <dd class="col-sm-9">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="status" />
+                        <label class="form-check-label">@Html.DisplayNameFor(model => model.status)</label>
+                    </div>
+                </dd>
+            </dl>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-outline-secondary ml-2">Atrás</a>
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Atrás</a>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

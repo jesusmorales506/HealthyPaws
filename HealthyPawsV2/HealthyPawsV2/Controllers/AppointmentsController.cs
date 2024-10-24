@@ -85,8 +85,15 @@ namespace HealthyPawsV2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AppointmentId,petFile,vetId,ownerId,Date,description,status,diagnostic,Additional")] Appointment appointment)
         {
+            // Verificar si la fecha de la cita es anterior a la fecha actual
+            if (appointment.Date < DateTime.Now)
+            {
+                ModelState.AddModelError("date", "La fecha de la cita no puede ser anterior a la fecha actual.");
+            }
+
             if (ModelState.IsValid)
             {
+                appointment.status = "Agendada";
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -95,6 +102,8 @@ namespace HealthyPawsV2.Controllers
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View(appointment);
         }
+
+
 
         // GET: Appointments/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -105,6 +114,15 @@ namespace HealthyPawsV2.Controllers
             }
 
             var appointment = await _context.Appointments.FindAsync(id);
+
+            ViewBag.StatusOptions = new SelectList(new List<string>
+            {
+                "Completada",
+                "Agendada",
+                "Cancelada",
+                "Pendiente"
+            });
+
             if (appointment == null)
             {
                 return NotFound();
@@ -112,6 +130,7 @@ namespace HealthyPawsV2.Controllers
             ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
             return View(appointment);
+
         }
 
         // POST: Appointments/Edit/5
