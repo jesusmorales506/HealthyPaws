@@ -14,6 +14,7 @@ namespace HealthyPawsV2.DAL
     {
         [Key]
         [Required]
+        [DisplayName("Id")]
         public int appointmentInventoryId { get; set; }
 
         [ForeignKey("Appointment")]
@@ -31,6 +32,9 @@ namespace HealthyPawsV2.DAL
 
         [DisplayName("Medida de Dosis")]
         public string  measuredose { get; set; }
+
+        [DisplayName("Estado")]
+        public bool status { get; set; }
 
         public Inventory? Inventory { get; set; }
 

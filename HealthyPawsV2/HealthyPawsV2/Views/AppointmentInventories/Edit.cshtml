@@ -1,50 +1,64 @@
 ﻿@model HealthyPawsV2.DAL.AppointmentInventory
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Inventario de Citas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<div class="card">
+    <div class="card-header">
+        <h1>Editar Inventario de Citas</h1>
+    </div>
 
-<h4>AppointmentInventory</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    <div class="card-body">
+       
+        <hr />
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="appointmentInventoryId" />
+
             <div class="form-group">
                 <label asp-for="appointmentId" class="control-label"></label>
                 <select asp-for="appointmentId" class="form-control" asp-items="ViewBag.appointmentId"></select>
                 <span asp-validation-for="appointmentId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="inventoryID" class="control-label"></label>
                 <select asp-for="inventoryID" class="form-control" asp-items="ViewBag.inventoryID"></select>
                 <span asp-validation-for="inventoryID" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="dose" class="control-label"></label>
                 <input asp-for="dose" class="form-control" />
                 <span asp-validation-for="dose" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="measuredose" class="control-label"></label>
                 <input asp-for="measuredose" class="form-control" />
                 <span asp-validation-for="measuredose" class="text-danger"></span>
             </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="status" /> @Html.DisplayNameFor(model => model.status)
+                </label>
+            </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

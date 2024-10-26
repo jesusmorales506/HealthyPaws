@@ -169,6 +169,7 @@ namespace HealthyPawsV2.Controllers
                 petBreed.status = false;
             }
 
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

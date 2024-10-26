@@ -40,13 +40,11 @@ namespace HealthyPawsV2.DAL
         [DisplayName("Proveedor")]
         public string provider { get; set; }
 
-
         [DisplayName("Contacto de Proveedor")]
         public string providerInfo { get; set; }
 
         [DisplayName("Estado")]
         public bool State { get; set; }
-
 
         public ICollection<AppointmentInventory> AppointmentInventories { get; set; } = new List<AppointmentInventory>();
 

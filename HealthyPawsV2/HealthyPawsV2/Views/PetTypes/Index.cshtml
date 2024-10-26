@@ -5,7 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div>
+    <h1 style="text-align: center">Módulo de Tipo Mascota</h1>
+</div>
+
 
 <div class="row">
     <div class="col-md-6">
@@ -52,9 +55,9 @@
                     @Html.DisplayFor(modelItem => item.status)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.petTypeId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.petTypeId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.petTypeId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.petTypeId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.petTypeId" class="btn btn-secondary btn-sm">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.petTypeId" class="btn btn-danger btn-sm BorrarElemento">Eliminar</a>
                 </td>
             </tr>
         }

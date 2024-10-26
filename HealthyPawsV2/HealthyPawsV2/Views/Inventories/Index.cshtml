@@ -5,7 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div>
+    <h1 style="text-align: center">Módulo de Inventario</h1>
+</div>
+
 
 <div class="row">
     <div class="col-md-6">
@@ -93,9 +96,9 @@
                     @Html.DisplayFor(modelItem => item.State)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.inventoryId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.inventoryId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.inventoryId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.inventoryId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.inventoryId" class="btn btn-secondary btn-sm">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.inventoryId" class="btn btn-danger btn-sm BorrarElemento">Eliminar</a>
                 </td>
             </tr>
         }

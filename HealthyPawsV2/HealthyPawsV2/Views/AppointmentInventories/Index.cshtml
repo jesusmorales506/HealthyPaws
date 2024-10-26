@@ -5,14 +5,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div>
+    <h1 style="text-align: center">Módulo de Cita-Inventario</h1>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">Añadir medicamentos de la Cita</a>
+    </div>
+    <div class="col-md-3" style="margin-left: 250px">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchInvApp" name="searchInvApp" class="form-control" style="width: 300px;" />
+            </div>
+            <p></p>
+            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
+        </form>
+        <p></p>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.appointmentInventoryId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.dose)
             </th>
@@ -20,10 +38,13 @@
                 @Html.DisplayNameFor(model => model.measuredose)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Inventory)
+                @Html.DisplayNameFor(model => model.inventoryID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Appointment)
+                @Html.DisplayNameFor(model => model.appointmentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
             </th>
             <th></th>
         </tr>
@@ -31,24 +52,36 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.dose)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.measuredose)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Inventory.brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Appointment.Additional)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.appointmentInventoryId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.appointmentInventoryId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.appointmentInventoryId">Delete</a>
+                <td>
+                    @Html.DisplayFor(modelItem => item.appointmentInventoryId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.dose)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.measuredose)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Inventory.brand)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Appointment.AppointmentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.appointmentInventoryId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.appointmentInventoryId" class="btn btn-secondary btn-sm">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.appointmentInventoryId" class="btn btn-danger btn-sm BorrarElemento">Eliminar</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}
