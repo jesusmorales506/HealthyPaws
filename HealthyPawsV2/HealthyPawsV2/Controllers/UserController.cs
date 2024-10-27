@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
 using HealthyPawsV2.Utils;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 public class UserController : Controller
@@ -23,7 +24,8 @@ public class UserController : Controller
         if (usuarios != null && usuarios.Count == 0)
         {
             ViewData["NoResultados"] = true;
-        } else
+        }
+        else
         {
             ViewData["NoResultados"] = false;
         }
@@ -90,7 +92,7 @@ public class UserController : Controller
         }
 
         //Create password with following format: Ale.c123
-        string password =  char.ToUpper(usuario.name[0]) + usuario.name.Substring(1, 2).ToLower() + "." + char.ToLower(usuario.surnames[0]) + "123";
+        string password = char.ToUpper(usuario.name[0]) + usuario.name.Substring(1, 2).ToLower() + "." + char.ToLower(usuario.surnames[0]) + "123";
         //hash the password
         string hashedPassword = PasswordUtility.HashPassword(usuario, password);
         usuario.PasswordHash = hashedPassword;
@@ -119,9 +121,9 @@ public class UserController : Controller
         {
             var address = new Address
             {
-                province = provinceName, 
-                canton = cantonName,     
-                district = districtName   
+                province = provinceName,
+                canton = cantonName,
+                district = districtName
             };
 
             //Lines 131/132/133 are creating the addresses and adding them to btoh tables Addresses and Users.
@@ -131,7 +133,7 @@ public class UserController : Controller
 
             _context.ApplicationUser.Add(usuario);
             _context.SaveChanges();
-            
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -142,23 +144,75 @@ public class UserController : Controller
         return View(usuario);
     }
 
-    [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
+    //public async Task<IActionResult> Edit(string id)
+    //{
+    //    var usuario = await _context.ApplicationUser
+    //        .FirstOrDefaultAsync(u => u.Id == id);
 
-        var usuario = await _userManager.FindByIdAsync(id);
+    //    if (usuario == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    // Cargar las provincias
+    //    var provincias = await _context.Addresses.Select(a => a.province).Distinct().ToListAsync();
+    //    ViewBag.Provincias = new SelectList(provincias);
+
+    //    // Cargar cantones y distritos basados en la provincia del usuario
+    //    var cantones = await _context.Addresses
+    //        .Where(a => a.province == usuario.province)
+    //        .Select(a => a.canton)
+    //        .Distinct()
+    //        .ToListAsync();
+    //    ViewBag.Cantones = new SelectList(cantones);
+
+    //    var distritos = await _context.Addresses
+    //        .Where(a => a.canton == usuario.canton)
+    //        .Select(a => a.district)
+    //        .Distinct()
+    //        .ToListAsync();
+    //    ViewBag.Distritos = new SelectList(distritos);
+
+    //    return View(usuario);
+    //}
+
+
+    //public async Task<IActionResult> Edit(string id)
+    //{
+    //    if (id == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    var usuario = await _userManager.FindByIdAsync(id);
+    //    if (usuario == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    return View(usuario);
+    //}
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(string id)
+    {
+        var usuario = await _context.ApplicationUser.FindAsync(id);
         if (usuario == null)
         {
             return NotFound();
         }
 
+        var address = await _context.Addresses.FindAsync(usuario.addressId);
+
+        // Asegúrate de pasar la dirección
+        ViewBag.Provincia = address?.province;
+        ViewBag.Canton = address?.canton;
+        ViewBag.Distrito = address?.district;
+
         return View(usuario);
     }
+
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -174,15 +228,42 @@ public class UserController : Controller
             try
             {
                 var userToUpdate = await _userManager.FindByIdAsync(id);
+                if (userToUpdate == null)
+                {
+                    return NotFound();
+                }
+
                 userToUpdate.name = usuario.name;
                 userToUpdate.surnames = usuario.surnames;
-                // Actualizar otras propiedades según sea necesario
+                userToUpdate.phone1 = usuario.phone1;
+                userToUpdate.phone2 = usuario.phone2;
+                userToUpdate.phone3 = usuario.phone3;
+                userToUpdate.Email = usuario.Email;
 
+                // Obtener la dirección
+                var address = await _context.Addresses.FindAsync(userToUpdate.addressId);
+                if (address != null)
+                {
+                    address.province = usuario.province; // O asegúrate de tener estos valores en el formulario
+                    address.canton = usuario.canton;
+                    address.district = usuario.district;
+                }
+
+                // Actualizar usuario
                 var result = await _userManager.UpdateAsync(userToUpdate);
                 if (!result.Succeeded)
                 {
-                    // Manejar errores de actualización
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(usuario);
                 }
+
+                // Actualizar dirección
+                _context.Addresses.Update(address);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -237,7 +318,6 @@ public class UserController : Controller
         return _userManager.FindByIdAsync(id) != null;
     }
 }
-
 
 
 
