@@ -4,319 +4,321 @@ using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
 using HealthyPawsV2.Utils;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 
 public class UserController : Controller
 {
-    private readonly HPContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
+	private readonly HPContext _context;
+	private readonly UserManager<ApplicationUser> _userManager;
+	private readonly RoleManager<IdentityRole> _roleManager;
 
-    public UserController(HPContext context, UserManager<ApplicationUser> userManager)
-    {
-        _context = context;
-        _userManager = userManager;
-    }
+	public UserController(HPContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+	{
+		_context = context;
+		_userManager = userManager;
+		_roleManager = roleManager;
+	}
 
-    public async Task<IActionResult> Index()
-    {
-        var usuarios = await _userManager.Users.ToListAsync();
+	public async Task<IActionResult> Index()
+	{
+		var usuarios = await _userManager.Users.ToListAsync();
 
-        if (usuarios != null && usuarios.Count == 0)
-        {
-            ViewData["NoResultados"] = true;
-        }
-        else
-        {
-            ViewData["NoResultados"] = false;
-        }
+		if (usuarios != null && usuarios.Count == 0)
+		{
+			ViewData["NoResultados"] = true;
+		}
+		else
+		{
+			ViewData["NoResultados"] = false;
+		}
 
-        return View(usuarios);
-    }
+		return View(usuarios);
+	}
 
-    public async Task<IActionResult> Details(string id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
+	public async Task<IActionResult> Details(string id)
+	{
+		if (id == null)
+		{
+			return NotFound();
+		}
 
-        var user = await _userManager.FindByIdAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
+		var user = await _userManager.FindByIdAsync(id);
+		if (user == null)
+		{
+			return NotFound();
+		}
 
-        return View(user);
-    }
+		return View(user);
+	}
 
-    // GET: Usuarios/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
+	// GET: Usuarios/Create
+	public async Task<IActionResult> CreateAsync()
+	{
+		ViewBag.Roles = await RolesUtils.GetAllRoles(_roleManager);
 
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> Create(ApplicationUser usuario)
-    //{
-    //    if (ModelState.IsValid)
-    //    {
-    //        var result = await _userManager.CreateAsync(usuario);
-    //        if (result.Succeeded)
-    //        {
-    //            return RedirectToAction(nameof(Index));
-    //        }
-    //        else
-    //        {
-    //            // Manejar errores de creación de usuario
-    //        }
-    //    }
-    //    return View(usuario);
-    //}
+		return View();
+	}
 
-    // POST: Mascotas/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("name,surnames,lastConnection,idType,idNumber,phone1,phone2,phone3,Email")] ApplicationUser usuario, string provinceName, string cantonName, string districtName)
-    {
-        //We get the last connection of the user
-        usuario.lastConnection = DateTime.Now.Date + DateTime.Now.TimeOfDay;
+	// POST: Mascotas/Create
+	// To protect from overposting attacks, enable the specific properties you want to bind to.
+	// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> Create([Bind("name,surnames,lastConnection,idType,idNumber,phone1,phone2,phone3,Email")] ApplicationUser usuario, string provinceName, string cantonName, string districtName, string role)
+	{
+		//We get the last connection of the user
+		usuario.lastConnection = DateTime.Now.Date + DateTime.Now.TimeOfDay;
+		usuario.status = true;
+		usuario.UserName = usuario.Email;
+		usuario.NormalizedUserName = usuario.Email.ToUpper();
+		usuario.NormalizedEmail = usuario.Email.ToUpper();
+		usuario.PhoneNumber = usuario.phone1;
 
-        //This is a Validation to know if the user is adding the Name and Surnames
-        if (string.IsNullOrEmpty(usuario.name) || string.IsNullOrEmpty(usuario.surnames))
-        {
-            ModelState.AddModelError("", "Los campos de Nombre y Apellidos son obligatorios.");
-            return View(usuario);
-        }
+		//This is a Validation to know if the user is adding the Name and Surnames
+		if (string.IsNullOrEmpty(usuario.name) || string.IsNullOrEmpty(usuario.surnames))
+		{
+			ModelState.AddModelError("", "Los campos de Nombre y Apellidos son obligatorios.");
+			return View(usuario);
+		}
 
-        //Create password with following format: Ale.c123
-        string password = char.ToUpper(usuario.name[0]) + usuario.name.Substring(1, 2).ToLower() + "." + char.ToLower(usuario.surnames[0]) + "123";
-        //hash the password
-        string hashedPassword = PasswordUtility.HashPassword(usuario, password);
-        usuario.PasswordHash = hashedPassword;
+		//Create password with some format
+		string password = char.ToUpper(usuario.name[0]) + usuario.name.Substring(1, 2).ToLower() + "." + char.ToLower(usuario.surnames[0]) + "123";
+		//hash the password
+		string hashedPassword = PasswordUtility.HashPassword(usuario, password);
+		usuario.PasswordHash = hashedPassword;
 
-        usuario.status = true;
-        usuario.UserName = usuario.Email;
-        usuario.NormalizedUserName = usuario.Email.ToUpper();
-        usuario.NormalizedEmail = usuario.Email.ToUpper();
-        usuario.PhoneNumber = usuario.phone1;
+		//Get logged user and assign it as loggedUser
+		var userIdentify = new ClaimsPrincipal(User.Identity);
+		var loggedUserTask = RolesUtils.GetLoggedUser(_userManager, userIdentify);
+		loggedUserTask.Wait();
+		var loggedUser = loggedUserTask.Result;
 
+		if (ModelState.IsValid)
+		{
+			var address = new Address
+			{
+				province = provinceName,
+				canton = cantonName,
+				district = districtName
+			};
 
-        //Obtener usuario logueado y asignarlo como UsuarioCreacionId
-        //var identidad = User.Identity as ClaimsIdentity;
-        //var usuarioLoggueadoTask = RolesUtils.ObtenerUsuarioLogueado(_userManager, new ClaimsPrincipal(identidad));
-        //usuarioLoggueadoTask.Wait();
-        //var usuarioLoggueado = usuarioLoggueadoTask.Result;
-        //mascota.UsuarioCreacionId = usuarioLoggueado.Id;
+			//Lines 131/132/133 are creating the addresses and adding them to btoh tables Addresses and Users.
+			_context.Addresses.Add(address);
+			await _context.SaveChangesAsync();
+			usuario.addressId = address.AddressId;
 
-        ////If usuario no es admin, asignar el usuario loggeado al duenoId
-        //if (!RolesUtils.UsuarioLogueadoEsRol(identidad, "Admin") || !RolesUtils.UsuarioLogueadoEsRol(identidad, "Veterinario"))
-        //{
-        //    mascota.DuenoId = usuarioLoggueado.Id;
-        //}
+			//Create user and add the password
+			var result = await _userManager.CreateAsync(usuario, password);
 
-        if (ModelState.IsValid)
-        {
-            var address = new Address
-            {
-                province = provinceName,
-                canton = cantonName,
-                district = districtName
-            };
+			if (result.Succeeded)
+			{
+				//Assign role "User" to the new user if there is no indicated role previously.
+				if (role == null)
+				{
+					var resultRole = await _userManager.AddToRoleAsync(usuario, "User");
 
-            //Lines 131/132/133 are creating the addresses and adding them to btoh tables Addresses and Users.
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
-            usuario.addressId = address.AddressId;
+					if (resultRole.Succeeded)
+					{
+						return RedirectToAction(nameof(Index));
+					}
+					else
+					{
+						foreach (var error in resultRole.Errors)
+						{
+							ModelState.AddModelError(string.Empty, error.Description);
+						}
+					}
+				}
+			}
+			else
+			{
+				foreach (var error in result.Errors)
+				{
+					ModelState.AddModelError(string.Empty, error.Description);
+				}
+			}
+		}
 
-            _context.ApplicationUser.Add(usuario);
-            _context.SaveChanges();
+		//ViewData["IdRazaMascota"] = new SelectList(_context.RazaMascotas, "IdRazaMascota", "Nombre", mascota.IdRazaMascota);
+		//ViewData["Usuarios"] = new SelectList(_context.ApplicationUser, "Id", "Nombre", mascota.UsuarioCreacionId);
+		//ViewData["TiposMascota"] = new SelectList(_context.TipoMascotas, "IdTipoMascota", "Nombre", mascota.IdTipoMascota);
 
-            return RedirectToAction(nameof(Index));
-        }
-
-        //ViewData["IdRazaMascota"] = new SelectList(_context.RazaMascotas, "IdRazaMascota", "Nombre", mascota.IdRazaMascota);
-        //ViewData["Usuarios"] = new SelectList(_context.ApplicationUser, "Id", "Nombre", mascota.UsuarioCreacionId);
-        //ViewData["TiposMascota"] = new SelectList(_context.TipoMascotas, "IdTipoMascota", "Nombre", mascota.IdTipoMascota);
-
-        return View(usuario);
-    }
-
-    //public async Task<IActionResult> Edit(string id)
-    //{
-    //    var usuario = await _context.ApplicationUser
-    //        .FirstOrDefaultAsync(u => u.Id == id);
-
-    //    if (usuario == null)
-    //    {
-    //        return NotFound();
-    //    }
-
-    //    // Cargar las provincias
-    //    var provincias = await _context.Addresses.Select(a => a.province).Distinct().ToListAsync();
-    //    ViewBag.Provincias = new SelectList(provincias);
-
-    //    // Cargar cantones y distritos basados en la provincia del usuario
-    //    var cantones = await _context.Addresses
-    //        .Where(a => a.province == usuario.province)
-    //        .Select(a => a.canton)
-    //        .Distinct()
-    //        .ToListAsync();
-    //    ViewBag.Cantones = new SelectList(cantones);
-
-    //    var distritos = await _context.Addresses
-    //        .Where(a => a.canton == usuario.canton)
-    //        .Select(a => a.district)
-    //        .Distinct()
-    //        .ToListAsync();
-    //    ViewBag.Distritos = new SelectList(distritos);
-
-    //    return View(usuario);
-    //}
+		return View(usuario);
+	}
 
 
-    //public async Task<IActionResult> Edit(string id)
-    //{
-    //    if (id == null)
-    //    {
-    //        return NotFound();
-    //    }
+	[HttpGet]
+	public async Task<IActionResult> Edit(string id)
+	{
+		var usuario = await _context.ApplicationUser.FindAsync(id);
+		if (usuario == null)
+		{
+			return NotFound();
+		}
 
-    //    var usuario = await _userManager.FindByIdAsync(id);
-    //    if (usuario == null)
-    //    {
-    //        return NotFound();
-    //    }
+		var address = await _context.Addresses.FindAsync(usuario.addressId);
 
-    //    return View(usuario);
-    //}
+		// Asegúrate de pasar la dirección
+		ViewBag.Provincia = address?.province;
+		ViewBag.Canton = address?.canton;
+		ViewBag.Distrito = address?.district;
 
-    [HttpGet]
-    public async Task<IActionResult> Edit(string id)
-    {
-        var usuario = await _context.ApplicationUser.FindAsync(id);
-        if (usuario == null)
-        {
-            return NotFound();
-        }
+		return View(usuario);
+	}
 
-        var address = await _context.Addresses.FindAsync(usuario.addressId);
+	//public async Task<IActionResult> Edit(string id)
+	//{
+	//    var usuario = await _context.ApplicationUser
+	//        .FirstOrDefaultAsync(u => u.Id == id);
 
-        // Asegúrate de pasar la dirección
-        ViewBag.Provincia = address?.province;
-        ViewBag.Canton = address?.canton;
-        ViewBag.Distrito = address?.district;
+	//    if (usuario == null)
+	//    {
+	//        return NotFound();
+	//    }
 
-        return View(usuario);
-    }
+	//    // Cargar las provincias
+	//    var provincias = await _context.Addresses.Select(a => a.province).Distinct().ToListAsync();
+	//    ViewBag.Provincias = new SelectList(provincias);
+
+	//    // Cargar cantones y distritos basados en la provincia del usuario
+	//    var cantones = await _context.Addresses
+	//        .Where(a => a.province == usuario.province)
+	//        .Select(a => a.canton)
+	//        .Distinct()
+	//        .ToListAsync();
+	//    ViewBag.Cantones = new SelectList(cantones);
+
+	//    var distritos = await _context.Addresses
+	//        .Where(a => a.canton == usuario.canton)
+	//        .Select(a => a.district)
+	//        .Distinct()
+	//        .ToListAsync();
+	//    ViewBag.Distritos = new SelectList(distritos);
+
+	//    return View(usuario);
+	//}
 
 
+	//public async Task<IActionResult> Edit(string id)
+	//{
+	//    if (id == null)
+	//    {
+	//        return NotFound();
+	//    }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(string id, ApplicationUser usuario)
-    {
-        if (id != usuario.Id)
-        {
-            return NotFound();
-        }
+	//    var usuario = await _userManager.FindByIdAsync(id);
+	//    if (usuario == null)
+	//    {
+	//        return NotFound();
+	//    }
 
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                var userToUpdate = await _userManager.FindByIdAsync(id);
-                if (userToUpdate == null)
-                {
-                    return NotFound();
-                }
+	//    return View(usuario);
+	//}
 
-                userToUpdate.name = usuario.name;
-                userToUpdate.surnames = usuario.surnames;
-                userToUpdate.phone1 = usuario.phone1;
-                userToUpdate.phone2 = usuario.phone2;
-                userToUpdate.phone3 = usuario.phone3;
-                userToUpdate.Email = usuario.Email;
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> Edit(string id, ApplicationUser usuario)
+	{
+		if (id != usuario.Id)
+		{
+			return NotFound();
+		}
 
-                // Obtener la dirección
-                var address = await _context.Addresses.FindAsync(userToUpdate.addressId);
-                if (address != null)
-                {
-                    address.province = usuario.province; // O asegúrate de tener estos valores en el formulario
-                    address.canton = usuario.canton;
-                    address.district = usuario.district;
-                }
+		if (ModelState.IsValid)
+		{
+			try
+			{
+				var userToUpdate = await _userManager.FindByIdAsync(id);
+				if (userToUpdate == null)
+				{
+					return NotFound();
+				}
 
-                // Actualizar usuario
-                var result = await _userManager.UpdateAsync(userToUpdate);
-                if (!result.Succeeded)
-                {
+				userToUpdate.name = usuario.name;
+				userToUpdate.surnames = usuario.surnames;
+				userToUpdate.phone1 = usuario.phone1;
+				userToUpdate.phone2 = usuario.phone2;
+				userToUpdate.phone3 = usuario.phone3;
+				userToUpdate.Email = usuario.Email;
 
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                    return View(usuario);
-                }
+				// Obtener la dirección
+				var address = await _context.Addresses.FindAsync(userToUpdate.addressId);
+				if (address != null)
+				{
+					address.province = usuario.province; // O asegúrate de tener estos valores en el formulario
+					address.canton = usuario.canton;
+					address.district = usuario.district;
+				}
 
-                // Actualizar dirección
-                _context.Addresses.Update(address);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(usuario.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        return View(usuario);
-    }
+				// Actualizar usuario
+				var result = await _userManager.UpdateAsync(userToUpdate);
+				if (!result.Succeeded)
+				{
 
-    public async Task<IActionResult> Delete(string id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
+					foreach (var error in result.Errors)
+					{
+						ModelState.AddModelError(string.Empty, error.Description);
+					}
+					return View(usuario);
+				}
 
-        var usuario = await _userManager.FindByIdAsync(id);
-        if (usuario == null)
-        {
-            return NotFound();
-        }
+				// Actualizar dirección
+				_context.Addresses.Update(address);
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!UserExists(usuario.Id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+			return RedirectToAction(nameof(Index));
+		}
+		return View(usuario);
+	}
 
-        return View(usuario);
-    }
+	public async Task<IActionResult> Delete(string id)
+	{
+		if (id == null)
+		{
+			return NotFound();
+		}
 
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(string id)
-    {
-        var usuario = await _userManager.FindByIdAsync(id);
-        if (usuario != null)
-        {
-            var result = await _userManager.DeleteAsync(usuario);
-            if (!result.Succeeded)
-            {
-                // Manejar errores de eliminación de usuario
-            }
-        }
-        return RedirectToAction(nameof(Index));
-    }
+		var usuario = await _userManager.FindByIdAsync(id);
+		if (usuario == null)
+		{
+			return NotFound();
+		}
 
-    private bool UserExists(string id)
-    {
-        return _userManager.FindByIdAsync(id) != null;
-    }
+		return View(usuario);
+	}
+
+	[HttpPost, ActionName("Delete")]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> DeleteConfirmed(string id)
+	{
+		var usuario = await _userManager.FindByIdAsync(id);
+		if (usuario != null)
+		{
+			var result = await _userManager.DeleteAsync(usuario);
+			if (!result.Succeeded)
+			{
+				// Manejar errores de eliminación de usuario
+			}
+		}
+		return RedirectToAction(nameof(Index));
+	}
+
+	private bool UserExists(string id)
+	{
+		return _userManager.FindByIdAsync(id) != null;
+	}
 }
 
 
