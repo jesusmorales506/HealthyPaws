@@ -1,7 +1,7 @@
 ﻿@model HealthyPawsV2.DAL.ApplicationUser
 
 @{
-    ViewData["Title"] = "Editar Usuario";
+    ViewData["Title"] = "Edit";
 
     
 }
@@ -67,43 +67,9 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <br />
-          
-
-        
-
-            <div class="form-group">
-                <label>Provincia</label>
-                <select asp-for="province" class="form-control">
-                    <option value="@ViewBag.Provincia">@ViewBag.Provincia</option>
-                    <!-- Otras provincias -->
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Cantón</label>
-                <select asp-for="canton" class="form-control">
-                    <option value="@ViewBag.Canton">@ViewBag.Canton</option>
-                    <!-- Otras cantones -->
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Distrito</label>
-                <select asp-for="district" class="form-control">
-                    <option value="@ViewBag.Distrito">@ViewBag.Distrito</option>
-                    <!-- Otras distritos -->
-                </select>
-            </div>
-
-           
             <div class="form-group">
                 <input type="submit" value="Editar" class="btn btn-primary" />
             </div>
-            <input type="hidden" name="provinceName" id="provinceName" value="" />
-            <input type="hidden" name="cantonName" id="cantonName" value="" />
-            <input type="hidden" name="districtName" id="districtName" value="" />
-
-
         </form>
     </div>
 
@@ -154,13 +120,6 @@
                 document.getElementById('surnames').readOnly = false;
             }
         });
-
-
-
-
-        
-
-
 
     </script>
 }

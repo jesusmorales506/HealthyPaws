@@ -148,142 +148,76 @@ public class UserController : Controller
 	}
 
 
-	[HttpGet]
-	public async Task<IActionResult> Edit(string id)
-	{
-		var usuario = await _context.ApplicationUser.FindAsync(id);
-		if (usuario == null)
-		{
-			return NotFound();
-		}
-
-		var address = await _context.Addresses.FindAsync(usuario.addressId);
-
-		// Asegúrate de pasar la dirección
-		ViewBag.Provincia = address?.province;
-		ViewBag.Canton = address?.canton;
-		ViewBag.Distrito = address?.district;
-
-		return View(usuario);
-	}
-
-	//public async Task<IActionResult> Edit(string id)
-	//{
-	//    var usuario = await _context.ApplicationUser
-	//        .FirstOrDefaultAsync(u => u.Id == id);
-
-	//    if (usuario == null)
-	//    {
-	//        return NotFound();
-	//    }
-
-	//    // Cargar las provincias
-	//    var provincias = await _context.Addresses.Select(a => a.province).Distinct().ToListAsync();
-	//    ViewBag.Provincias = new SelectList(provincias);
-
-	//    // Cargar cantones y distritos basados en la provincia del usuario
-	//    var cantones = await _context.Addresses
-	//        .Where(a => a.province == usuario.province)
-	//        .Select(a => a.canton)
-	//        .Distinct()
-	//        .ToListAsync();
-	//    ViewBag.Cantones = new SelectList(cantones);
-
-	//    var distritos = await _context.Addresses
-	//        .Where(a => a.canton == usuario.canton)
-	//        .Select(a => a.district)
-	//        .Distinct()
-	//        .ToListAsync();
-	//    ViewBag.Distritos = new SelectList(distritos);
-
-	//    return View(usuario);
-	//}
+    [HttpGet]
+    public async Task<IActionResult> Edit(string id)
+    {
+        var usuario = await _context.ApplicationUser.FindAsync(id);
+        if (usuario == null)
+        {
+            return NotFound();
+        }
+        return View(usuario);
+    }
 
 
-	//public async Task<IActionResult> Edit(string id)
-	//{
-	//    if (id == null)
-	//    {
-	//        return NotFound();
-	//    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(string id, ApplicationUser usuario)
+    {
+        if (id != usuario.Id)
+        {
+            return NotFound();
+        }
 
-	//    var usuario = await _userManager.FindByIdAsync(id);
-	//    if (usuario == null)
-	//    {
-	//        return NotFound();
-	//    }
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var userToUpdate = await _userManager.FindByIdAsync(id);
+                if (userToUpdate == null)
+                {
+                    return NotFound();
+                }
 
-	//    return View(usuario);
-	//}
+                userToUpdate.name = usuario.name;
+                userToUpdate.surnames = usuario.surnames;
+                userToUpdate.phone1 = usuario.phone1;
+                userToUpdate.phone2 = usuario.phone2;
+                userToUpdate.phone3 = usuario.phone3;
+                userToUpdate.Email = usuario.Email;
 
-	[HttpPost]
-	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Edit(string id, ApplicationUser usuario)
-	{
-		if (id != usuario.Id)
-		{
-			return NotFound();
-		}
+     
+                var result = await _userManager.UpdateAsync(userToUpdate);
+                if (!result.Succeeded)
+                {
 
-		if (ModelState.IsValid)
-		{
-			try
-			{
-				var userToUpdate = await _userManager.FindByIdAsync(id);
-				if (userToUpdate == null)
-				{
-					return NotFound();
-				}
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(usuario);
+                }
 
-				userToUpdate.name = usuario.name;
-				userToUpdate.surnames = usuario.surnames;
-				userToUpdate.phone1 = usuario.phone1;
-				userToUpdate.phone2 = usuario.phone2;
-				userToUpdate.phone3 = usuario.phone3;
-				userToUpdate.Email = usuario.Email;
 
-				// Obtener la dirección
-				var address = await _context.Addresses.FindAsync(userToUpdate.addressId);
-				if (address != null)
-				{
-					address.province = usuario.province; // O asegúrate de tener estos valores en el formulario
-					address.canton = usuario.canton;
-					address.district = usuario.district;
-				}
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(usuario.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+        return View(usuario);
+    }
 
-				// Actualizar usuario
-				var result = await _userManager.UpdateAsync(userToUpdate);
-				if (!result.Succeeded)
-				{
 
-					foreach (var error in result.Errors)
-					{
-						ModelState.AddModelError(string.Empty, error.Description);
-					}
-					return View(usuario);
-				}
-
-				// Actualizar dirección
-				_context.Addresses.Update(address);
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!UserExists(usuario.Id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
-			return RedirectToAction(nameof(Index));
-		}
-		return View(usuario);
-	}
-
-	public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete(string id)
 	{
 		if (id == null)
 		{

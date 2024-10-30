@@ -68,7 +68,7 @@
 
                     </div>
                     <div class="card-footer">
-                        <a asp-action="Edit" asp-route-id="@item.name" class="btn btn-primary">Editar</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Editar</a>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Detalles</a>
                         <a class="btn btn-danger BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.name">Eliminar</a>
                     </div>
