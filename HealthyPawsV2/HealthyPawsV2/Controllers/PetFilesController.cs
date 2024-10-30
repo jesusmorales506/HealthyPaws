@@ -28,7 +28,7 @@ namespace HealthyPawsV2.Controllers
             var pets = _context.PetFiles
                 .Include(p => p.dueno)
                 .Include(p => p.PetBreed)
-                .ThenInclude(b => b.PetType).AsQueryable();
+                .ThenInclude(b => b.PetType).Where(p => p.status) .AsQueryable(); 
 
             if (!string.IsNullOrEmpty(searchPetFile))
             {

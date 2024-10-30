@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HealthyPawsV2.DAL.PetFile>
+﻿@* @model IEnumerable<HealthyPawsV2.DAL.PetFile>
 
 @{
     ViewData["Title"] = "Index";
@@ -117,7 +117,7 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.petFileId" class="btn btn-primary btn-sm"> Editar </a> 
                     <a asp-action="Details" asp-route-id="@item.petFileId" class="btn btn-secondary btn-sm">Detalles</a>
-                    <a asp-action="Delete" asp-route-id="@item.petFileId" class="btn btn-danger btn-sm BorrarElemento">Eliminar</a>
+                    <a class="btn btn-danger BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
                 </td>
             </tr>
         }
@@ -128,4 +128,89 @@
     <p>No se encuentran resultados de búsqueda.</p>
 }
 <br />
+<br /> *@
+
+@model IEnumerable<HealthyPawsV2.DAL.PetFile>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <br />
+<br />
+<br />
+
+
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">Añadir Expediente Mascota</a>
+    </div>
+    <div class="col-md-3" style="margin-left: 250px">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchPetFile" name="searchPetFile" class="form-control" style="width: 300px;" />
+            </div>
+            <p></p>
+            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
+        </form>
+        <p></p>
+    </div>
+</div>
+
+<div class="accordion" id="petFilesAccordion">
+    @foreach (var item in Model)
+    {
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading-@item.petFileId">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@item.petFileId" aria-expanded="true" aria-controls="collapse-@item.petFileId">
+                    @Html.DisplayFor(modelItem => item.petFileId) - 
+                    @Html.DisplayFor(modelItem => item.name) - 
+                    @Html.DisplayFor(modelItem => item.dueno)
+                </button>
+            </h2>
+            <div id="collapse-@item.petFileId" class="accordion-collapse collapse" aria-labelledby="heading-@item.petFileId" data-bs-parent="#petFilesAccordion">
+                <div class="accordion-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>ID:</th>
+                                <td>@Html.DisplayFor(modelItem => item.petFileId)</td>
+                            </tr>
+                            <tr>
+                                <th>Nombre:</th>
+                                <td>@Html.DisplayFor(modelItem => item.name)</td>
+                            </tr>
+                            <tr>
+                                <th>Tipo:</th>
+                                <td>@Html.DisplayFor(modelItem => item.PetBreed.PetType.name)</td>
+                            </tr>
+                            <tr>
+                                <th>Raza:</th>
+                                <td>@Html.DisplayFor(modelItem => item.PetBreed.name)</td>
+                            </tr>
+                            <tr>
+                                <th>Género:</th>
+                                <td>@Html.DisplayFor(modelItem => item.gender)</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <a asp-action="Edit" asp-route-id="@item.petFileId" class="btn btn-primary btn-sm">Editar</a>
+                                    <a asp-action="Details" asp-route-id="@item.petFileId" class="btn btn-secondary btn-sm">Detalles</a>
+                                    <a class="btn btn-danger BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}
+
+

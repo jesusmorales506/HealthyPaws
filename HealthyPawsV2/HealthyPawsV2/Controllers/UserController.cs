@@ -202,14 +202,7 @@ public class UserController : Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(usuario.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+               
             }
             return RedirectToAction(nameof(Index));
         }
@@ -224,35 +217,31 @@ public class UserController : Controller
 			return NotFound();
 		}
 
-		var usuario = await _userManager.FindByIdAsync(id);
+		var usuario = await _context.ApplicationUser.FindAsync(id);
 		if (usuario == null)
 		{
 			return NotFound();
 		}
 
-		return View(usuario);
+		usuario.status = false;
+		await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+        //return View(usuario);
 	}
 
 	[HttpPost, ActionName("Delete")]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> DeleteConfirmed(string id)
 	{
-		var usuario = await _userManager.FindByIdAsync(id);
-		if (usuario != null)
+		var usuario = await _context.ApplicationUser.FindAsync(id);
+        if (usuario != null)
 		{
-			var result = await _userManager.DeleteAsync(usuario);
-			if (!result.Succeeded)
-			{
-				// Manejar errores de eliminación de usuario
-			}
+			usuario.status = false;
 		}
 		return RedirectToAction(nameof(Index));
 	}
 
-	private bool UserExists(string id)
-	{
-		return _userManager.FindByIdAsync(id) != null;
-	}
+	
 }
 
 
