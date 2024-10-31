@@ -39,9 +39,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.AppointmentId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.petFile)
-            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.PetFile.name)
+            </th> 
             <th>
                 @Html.DisplayNameFor(model => model.vetId)
             </th>
@@ -72,9 +72,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AppointmentId)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.petFile)
-            </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.PetFile.name)
+            </td> 
             <td>
                 @Html.DisplayFor(modelItem => item.vetId)
             </td>
@@ -99,7 +99,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm">Editar</a>
                 <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm">Detalles</a>
-                <a class="btn btn-danger BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
+                <a class="btn btn-danger" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
             </td>
         </tr>
 }

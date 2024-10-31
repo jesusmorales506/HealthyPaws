@@ -25,17 +25,17 @@ namespace HealthyPawsV2.Controllers
         public async Task<IActionResult> Index(string searchAppointment)
         {
             var appointments = _context.Appointments
-                .Include(a => a.petId)
+                .Include(a => a.PetFile)
                 .Include(a => a.owner)
                 .AsQueryable();
 
-   
+
 
             if (!string.IsNullOrEmpty(searchAppointment))
             {
                 appointments = appointments.Where(a =>
                     a.AppointmentId.ToString().Contains(searchAppointment) ||
-                    a.petId.name.Contains(searchAppointment) ||
+                    //a.petId.name.Contains(searchAppointment) ||
                     a.owner.UserName.Contains(searchAppointment) ||
                     a.veterinario.UserName.Contains(searchAppointment)
                 );
@@ -58,7 +58,7 @@ namespace HealthyPawsV2.Controllers
             }
 
             var appointment = await _context.Appointments
-                .Include(a => a.petId)
+                .Include(a => a.PetFile)
                 .Include(a => a.owner)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
 
@@ -83,7 +83,7 @@ namespace HealthyPawsV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,petFile,vetId,ownerId,Date,description,status,diagnostic,Additional")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("AppointmentId,petFileId,vetId,ownerId,Date,description,status,diagnostic,Additional")] Appointment appointment)
         {
             // Verificar si la fecha de la cita es anterior a la fecha actual
             if (appointment.Date < DateTime.Now)
@@ -138,7 +138,7 @@ namespace HealthyPawsV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,petFile,vetId,ownerId,documentId,Date,description,status,diagnostic,Additional")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,petFileId,vetId,ownerId,documentId,Date,description,status,diagnostic,Additional")] Appointment appointment)
         {
             if (id != appointment.AppointmentId)
             {
@@ -179,7 +179,7 @@ namespace HealthyPawsV2.Controllers
             }
 
             var appointment = await _context.Appointments
-                .Include(a => a.petId)
+                .Include(a => a.PetFile)
                 .Include(a => a.owner)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
             if (appointment == null)

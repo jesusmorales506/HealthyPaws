@@ -24,4 +24,6 @@ $('.BorrarElemento').click(function (event) {
             window.location.href = url;
         }, 3000);
     }
+
+
 });
