@@ -28,6 +28,7 @@ namespace HealthyPawsV2.Controllers
             if (!string.IsNullOrEmpty(searchPetBreed))
             {
                 PetBreed = PetBreed.Where(m => m.name.Contains(searchPetBreed));
+                
             }
             var hpContext = await PetBreed.ToListAsync();
 
@@ -39,6 +40,7 @@ namespace HealthyPawsV2.Controllers
             {
                 ViewBag.NoResultados = false;
             }
+            
 
             return View(hpContext);
         }
