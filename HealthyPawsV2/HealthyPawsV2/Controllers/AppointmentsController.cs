@@ -85,6 +85,7 @@ namespace HealthyPawsV2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AppointmentId,petFileId,vetId,ownerId,Date,description,status,diagnostic,Additional")] Appointment appointment)
         {
+            appointment.diagnostic = "Aun no hay Diagnostico"; // I Added this just to add Something
             // Verificar si la fecha de la cita es anterior a la fecha actual
             if (appointment.Date < DateTime.Now)
             {

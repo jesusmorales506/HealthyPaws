@@ -22,8 +22,9 @@ namespace HealthyPawsV2.Controllers
         public async Task<IActionResult> Index(string searchPetBreed)
         {
             var PetBreed = _context.PetBreeds
-                .Include(r => r.PetType)
+                .Include(r => r.PetType).Where(p => p.status)
                 .AsQueryable();
+
             if (!string.IsNullOrEmpty(searchPetBreed))
             {
                 PetBreed = PetBreed.Where(m => m.name.Contains(searchPetBreed));
@@ -155,7 +156,9 @@ namespace HealthyPawsV2.Controllers
                 return NotFound();
             }
 
-            return View(petBreed);
+            petBreed.status = false;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: PetBreeds/Delete/5

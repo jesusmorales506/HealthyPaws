@@ -16,13 +16,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
              <div class="form-group">
-                <label asp-for="petFileId" class="control-label"></label>
+                <label asp-for="petFileId" class="control-label">Nombre de la Mascota</label>
                 <select asp-for="petFileId" class="form-control" asp-items="ViewBag.petFileId"></select>
                 <span asp-validation-for="petFileId" class="text-danger"></span>
             </div> 
 
             <div class="form-group">
-                <label asp-for="vetId" class="control-label"></label>
+                <label asp-for="vetId" class="control-label">Nombre del Veterinario</label>
                 <select asp-for="vetId" class="form-control" asp-items="ViewBag.Users"></select>
                 <span asp-validation-for="vetId" class="text-danger"></span>
             </div>
@@ -48,7 +48,7 @@
             <div class="form-group">
                 <label asp-for="diagnostic" class="control-label"></label>
                 <input asp-for="diagnostic" class="form-control" />
-                <span asp-validation-for="diagnostic" class="text-danger"></span>
+                @* <span asp-validation-for="diagnostic" class="text-danger"></span> *@
             </div>
 
             <div class="form-group">

@@ -70,8 +70,15 @@ namespace HealthyPawsV2.Controllers
         public IActionResult Create()
         {
             // ViewData["inventoryID"] = new SelectList(_context.Inventories, "inventoryId", "name");
-            ViewData["appointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId");            
+            //ViewData["appointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId");            
             ViewData["inventoryID"] = new SelectList(_context.Inventories.Where(i => i.category == "Medicamento"), "inventoryId", "name");
+
+            ViewData["appointmentId"] = new SelectList(_context.Appointments
+        .Select(a => new
+        {
+            AppointmentId = a.AppointmentId,
+            DisplayName = $"{a.AppointmentId} - {a.PetFile.name} - {a.PetFile.idNumber}"
+        }), "AppointmentId", "DisplayName");
             return View();
         }
 

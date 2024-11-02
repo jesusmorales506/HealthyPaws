@@ -75,8 +75,18 @@ namespace HealthyPawsV2.Controllers
         public IActionResult Create()
         {
             ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name");
-            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
+
+            //Here we are inlcuding the name -Surnames and Idnumber form the user 
+            ViewData["Users"] = new SelectList(_context.ApplicationUser
+                .Select(u => new
+                {
+                    Id = u.Id,
+                    DisplayName = $"{u.name} {u.surnames} - {u.idNumber}"
+                }), "Id", "DisplayName");
+
             ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name");
+
+            
 
             return View();
         }

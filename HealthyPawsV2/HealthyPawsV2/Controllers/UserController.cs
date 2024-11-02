@@ -20,9 +20,10 @@ public class UserController : Controller
 		_roleManager = roleManager;
 	}
 
-	public async Task<IActionResult> Index()
+    [HttpGet]
+    public async Task<IActionResult> Index()
 	{
-		var usuarios = await _userManager.Users.ToListAsync();
+		var usuarios = await _userManager.Users.Where(p => p.status).ToListAsync();
 
 		if (usuarios != null && usuarios.Count == 0)
 		{
@@ -35,8 +36,14 @@ public class UserController : Controller
 
 		return View(usuarios);
 	}
+	
+    
 
-	public async Task<IActionResult> Details(string id)
+
+
+
+
+    public async Task<IActionResult> Details(string id)
 	{
 		if (id == null)
 		{

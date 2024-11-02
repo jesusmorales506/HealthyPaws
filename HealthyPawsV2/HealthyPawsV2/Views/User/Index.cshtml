@@ -17,9 +17,7 @@
 <br />
 
 
-@* <div>
-    <h1 style="text-align: center">Nuestros Usuarios</h1>
-</div> *@
+
 
 
 <div class="row">
@@ -29,10 +27,10 @@
     <div class="col-md-3" style="margin-left: 250px">
         <form asp-action="Index" method="get" class="form-inline">
             <div class="form-group mr-2">
-                <input type="text" id="userSearch" name="userSearch" class="form-control" style="width: 300px;" />
+                <input type="text" id="userSearch" name="userSearch" class="form-control" style="width: 300px;" placeholder="Buscar usuario..." />
             </div>
             <p></p>
-            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
+            <button type="submit" class="btn btn-primary" style="margin-left: 75%" >Buscar</button>
         </form>
         <p></p>
     </div>
@@ -54,8 +52,8 @@
                     <div class="card-body">
                         <h4 class="card-title">@Html.DisplayFor(modelItem => item.name)</h4>
                         <p class="card-text">Apellidos: @Html.DisplayFor(modelItem => item.surnames)</p>
-                        <p class="card-text">Ultima Fecha de Conexion: @Html.DisplayFor(modelItem => item.lastConnection)</p>
                         <p class="card-text">Correo: @Html.DisplayFor(modelItem => item.Email)</p>
+                        <p class="card-text">Teléfono: @Html.DisplayFor(modelItem => item.phone1)</p>
                         <p class="card-text">
                             Estado:
                             @if (item.status)
@@ -80,3 +78,8 @@
 
     </div>
 </div>
+
+
+
+
+

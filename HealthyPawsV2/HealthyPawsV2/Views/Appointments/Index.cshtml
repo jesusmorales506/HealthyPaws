@@ -42,11 +42,12 @@
              <th>
                 @Html.DisplayNameFor(model => model.PetFile.name)
             </th> 
-            <th>
-                @Html.DisplayNameFor(model => model.vetId)
-            </th>
+            
             <th>
                 @Html.DisplayNameFor(model => model.ownerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.vetId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Date)
@@ -75,12 +76,13 @@
              <td>
                 @Html.DisplayFor(modelItem => item.PetFile.name)
             </td> 
-            <td>
-                @Html.DisplayFor(modelItem => item.vetId)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.owner.name)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.vetId)
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
