@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<HealthyPawsV2.DAL.PetFile>
 
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+<style>
+    .color {
+        background-color: darkgrey;
+    }
+</style>
 
 <div>
     <h1 style="text-align: center">Módulo de Mascotas</h1>
@@ -12,12 +13,12 @@
 
 <div class="row">
     <div class="col-md-6">
-        <a asp-action="Create" class="btn btn-primary">Añadir Expediente Mascota</a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AbrirExpediente">Abrir Expediente</button>
     </div>
     <div class="col-md-3" style="margin-left: 250px">
         <form asp-action="Index" method="get" class="form-inline">
             <div class="form-group mr-2">
-                <input type="text" id="searchPetFile" name="searchPetFile" class="form-control" style="width: 300px;" />
+                <input type="text" id="searchPetFile" name="searchPetFile" class="form-control" style="width: 300px; margin-bottom: 2%" />
             </div>
             <p></p>
             <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
@@ -26,109 +27,177 @@
     </div>
 </div>
 
-<table class="table">
-    <thead>
+<table class="table table-bordered">
+    <thead class="color">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.petFileId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.idNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.petTypeId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.petBreedId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.age)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.weight)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.castration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.creationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.vaccineHistory)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.First().petFileId)</th>
+            <th>@Html.DisplayNameFor(model => model.First().dueno.name)</th>
+            <th>@Html.DisplayNameFor(model => model.name)</th>
+            <th>@Html.DisplayNameFor(model => model.PetBreed.PetType.name)</th>
+            <th>@Html.DisplayNameFor(model => model.PetBreed.name)</th>
+            <th>@Html.DisplayNameFor(model => model.gender)</th>
+            <th>@Html.DisplayNameFor(model => model.age)</th>
+            <th>@Html.DisplayNameFor(model => model.weight)</th>
+            <th>@Html.DisplayNameFor(model => model.castration)</th>
+            <th>@Html.DisplayNameFor(model => model.description)</th>
+            <th>@Html.DisplayNameFor(model => model.status)</th>
+            <th>@Html.DisplayNameFor(model => model.creationDate)</th>
+            <th>@Html.DisplayNameFor(model => model.vaccineHistory)</th>
+            <th>Acciones</th>
         </tr>
     </thead>
-    <tbody>       
+    <tbody>
         @foreach (var item in Model)
         {
             <tr>
+                <td>@Html.DisplayFor(modelItem => item.petFileId)</td>
+                <td>@Html.DisplayFor(modelItem => item.dueno.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.PetBreed.PetType.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.PetBreed.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.gender)</td>
+                <td>@Html.DisplayFor(modelItem => item.age)</td>
+                <td>@Html.DisplayFor(modelItem => item.weight)<span> KG</span></td>
+                <td>@Html.DisplayFor(modelItem => item.castration)</td>
+                <td>@Html.DisplayFor(modelItem => item.description)</td>
+                <td>@Html.DisplayFor(modelItem => item.status)</td>
+                <td>@Html.DisplayFor(modelItem => item.creationDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.vaccineHistory)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.petFileId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.dueno.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PetBreed.PetType.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PetBreed.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.gender)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.age)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.weight)<span>KG</span>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.castration)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.creationDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.vaccineHistory)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.petFileId" class="btn btn-primary btn-sm"> Editar </a> 
+                    <a asp-action="Edit" asp-route-id="@item.petFileId" class="btn btn-primary btn-sm">Editar</a>
                     <a asp-action="Details" asp-route-id="@item.petFileId" class="btn btn-secondary btn-sm">Detalles</a>
-                    <a class="btn btn-danger BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
+                    <a class="btn btn-danger BorrarElemento" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
 @if ((bool)ViewBag.NoResultados)
 {
     <p>No se encuentran resultados de búsqueda.</p>
 }
 <br />
 <br /> 
+
+
+
+<div class="modal fade" id="AbrirExpediente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Mascota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group">
+                                <label for="name">Nombre</label>
+                                <input type="text" name="name" class="form-control" placeholder="Ej: Bolita" required />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="idNumber">Seleccione al Dueño</label>
+                                <select name="idNumber" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione al Dueño</option>
+                                    @foreach (var user in ViewBag.Users)
+                                    {
+                                        <option value="@user.Value">@user.Text</option>
+                                    }
+                                </select>
+                                
+                            </div>
+
+                            <div class="form-group">
+                                <label for="petTypeId">Tipo de Mascota</label>
+                                <select name="petTypeId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el Tipo de Mascota</option>
+                                    @foreach (var petType in ViewBag.PetTypes)
+                                    {
+                                        <option value="@petType.Value">@petType.Text</option>
+                                    }
+                                </select>
+                                
+                            </div>
+
+                            <div class="form-group">
+                                <label for="petBreedId">Raza de la Mascota</label>
+                                <select name="petBreedId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione la Raza de la Mascota</option>
+                                    @foreach (var petBreed in ViewBag.PetBreeds)
+                                    {
+                                        <option value="@petBreed.Value">@petBreed.Text</option>
+                                    }
+                                </select>
+                                
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender">Género</label>
+                                <select name="gender" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el Género de la Mascota</option>
+                                    <option value="Hembra">Hembra</option>
+                                    <option value="Macho">Macho</option>
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="age">Edad</label>
+                                <input type="number" name="age" class="form-control" required />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="weight">Peso</label>
+                                <input type="number" name="weight" class="form-control" placeholder="KG" required />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vaccineHistory">Historial de Vacunas</label>
+                                <input type="text" name="vaccineHistory" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="castration">Castración</label>
+                                <select name="castration" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el tipo de Castración</option>
+                                    <option value="Ovariohisterectomía">Ovariohisterectomía</option>
+                                    <option value="Orquiectomía">Orquiectomía</option>
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Descripción</label>
+                                <input type="text" name="description" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <br />
+                            <div class="form-group">
+                                <input type="submit" value="Crear" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 
 

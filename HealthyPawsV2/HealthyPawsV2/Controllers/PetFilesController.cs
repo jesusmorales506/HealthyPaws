@@ -24,12 +24,14 @@ namespace HealthyPawsV2.Controllers
         // GET: PetFiles
         public async Task<IActionResult> Index(string searchPetFile)
         {
-
             var pets = _context.PetFiles
                 .Include(p => p.dueno)
                 .Include(p => p.PetBreed)
-                .ThenInclude(b => b.PetType).Where(p => p.status) .AsQueryable(); 
+                .ThenInclude(b => b.PetType)
+                .Where(p => p.status)
+                .AsQueryable();
 
+            //This the Search Bar
             if (!string.IsNullOrEmpty(searchPetFile))
             {
                 int.TryParse(searchPetFile, out int parsedPetFileId);
@@ -37,15 +39,19 @@ namespace HealthyPawsV2.Controllers
             }
 
             var hpContext = await pets.ToListAsync();
+            ViewBag.NoResultados = hpContext.Count == 0;
 
-            if (hpContext.Count == 0)
-            {
-                ViewBag.NoResultados = true;
-            }
-            else
-            {
-                ViewBag.NoResultados = false;
-            }
+            //Properties for the Modal
+            ViewBag.Users = new SelectList(await _context.ApplicationUser
+                .Select(u => new
+                {
+                    Id = u.idNumber,
+                    DisplayName = $"{u.name} {u.surnames} - {u.idNumber}"
+                })
+                .ToListAsync(), "Id", "DisplayName");
+
+            ViewBag.PetTypes = new SelectList(await _context.PetTypes.ToListAsync(), "petTypeId", "name");
+            ViewBag.PetBreeds = new SelectList(await _context.PetBreeds.ToListAsync(), "petBreedId", "name");
 
             return View(hpContext);
         }

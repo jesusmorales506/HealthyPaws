@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<HealthyPawsV2.DAL.PetBreed>
 
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+<style>
+    .color {
+        background-color: darkgrey;
+    }
+</style>
 
 <div>
     <h1 style="text-align: center">Módulo de Raza Mascota</h1>
@@ -12,12 +13,13 @@
 
 <div class="row">
     <div class="col-md-6">
-        <a asp-action="Create" class="btn btn-primary">Añadir Raza de Mascota</a>
+        @* <a asp-action="Create" class="btn btn-primary">Añadir Raza de Mascota</a> *@
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AñadirRaza">Añadir Raza de Mascota</button>
     </div>
     <div class="col-md-3" style="margin-left: 250px">
         <form asp-action="Index" method="get" class="form-inline">
             <div class="form-group mr-2">
-                <input type="text" id="searchPetBreed" name="searchPetBreed" class="form-control" style="width: 300px;" />
+                <input type="text" id="searchPetBreed" name="searchPetBreed" class="form-control" style="width: 300px; margin-bottom: 2%" />
             </div>
             <p></p>
             <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
@@ -25,45 +27,30 @@
         <p></p>
     </div>
 </div>
-<table class="table">
-    <thead>
+<br />
+<table class="table table-bordered">
+    <thead class="color">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.petBreedId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.petTypeId)
-            </th>
-            <th></th>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().petBreedId)</th>
+            <th>@Html.DisplayNameFor(model => model.First().name)</th>
+            <th>@Html.DisplayNameFor(model => model.First().status)</th>
+            <th>@Html.DisplayNameFor(model => model.First().petTypeId)</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
+                <td>@Html.DisplayFor(modelItem => item.petBreedId)</td>
+                <td>@Html.DisplayFor(modelItem => item.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.status)</td>
+                <td>@Html.DisplayFor(modelItem => item.PetType.name)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.petBreedId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PetType.name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.petBreedId" class="btn btn-primary btn-sm">Editar</a>
-                    <a asp-action="Details" asp-route-id="@item.petBreedId" class="btn btn-secondary btn-sm">Detalles</a>
-                    <a class="btn btn-danger BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.petBreedId">Eliminar</a>
-                    
+                    <a asp-action="Edit" asp-route-id="@item.petTypeId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.petTypeId" class="btn btn-secondary btn-sm">Detalles</a>
+                    <a class="btn btn-danger BorrarElemento" asp-action="Delete" asp-route-id="@item.petTypeId">Eliminar</a>
                 </td>
             </tr>
         }
@@ -71,10 +58,59 @@
 </table>
 
 
-
 @if ((bool)ViewBag.NoResultados)
 {
     <p>No se encuentran resultados de búsqueda.</p>
 } 
+
+
+@* Modal *@
+<div class="modal fade" id="AñadirRaza" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Raza de Mascota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group">
+                                <label for="petTypeId">Tipo de Mascota</label>
+                                <select name="petTypeId" class="form-control">
+                                    <option value="">Seleccione un tipo de mascota</option>
+                                    @foreach (var petType in ViewBag.PetTypes)
+                                    {
+                                        <option value="@petType.petTypeId">@petType.name</option>
+                                    }
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Raza</label>
+                                <input type="text" name="name" class="form-control" required />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            
+
+                            <br />
+                            <div class="form-group">
+                                <input type="submit" value="Crear" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 

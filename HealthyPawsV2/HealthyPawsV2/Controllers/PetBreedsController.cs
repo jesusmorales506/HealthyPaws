@@ -21,28 +21,22 @@ namespace HealthyPawsV2.Controllers
         // GET: PetBreeds
         public async Task<IActionResult> Index(string searchPetBreed)
         {
-            var PetBreed = _context.PetBreeds
-                .Include(r => r.PetType).Where(p => p.status)
+            var petBreedsQuery = _context.PetBreeds
+                .Include(r => r.PetType)
+                .Where(p => p.status)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchPetBreed))
             {
-                PetBreed = PetBreed.Where(m => m.name.Contains(searchPetBreed));
-                
+                petBreedsQuery = petBreedsQuery.Where(m => m.name.Contains(searchPetBreed));
             }
-            var hpContext = await PetBreed.ToListAsync();
 
-            if (hpContext.Count == 0)
-            {
-                ViewBag.NoResultados = true;
-            }
-            else
-            {
-                ViewBag.NoResultados = false;
-            }
-            
+            var petBreeds = await petBreedsQuery.ToListAsync();
 
-            return View(hpContext);
+            ViewBag.PetTypes = await _context.PetTypes.ToListAsync();
+            ViewBag.NoResultados = petBreeds.Count == 0;
+
+            return View(petBreeds);
         }
 
         // GET: PetBreeds/Details/5
@@ -85,7 +79,8 @@ namespace HealthyPawsV2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name", petBreed.petTypeId);
+            
+            ViewBag.PetTypes = new SelectList(await _context.PetTypes.ToListAsync(), "petTypeId", "name", petBreed.petTypeId);
             return View(petBreed);
         }
 

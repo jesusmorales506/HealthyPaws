@@ -27,19 +27,18 @@ namespace HealthyPawsV2.Controllers
             {
                 petType = petType.Where(m => m.name.Contains(searchPetType));
             }
+
             var hpcontext = await petType.ToListAsync();
 
-            if (hpcontext.Count == 0)
-            {
-                ViewBag.NoResultados = true;
-            }
-            else
-            {
-                ViewBag.NoResultados = false;
-            }
+            ViewBag.NoResultados = hpcontext.Count == 0;
+
+            //ViewBag for the Model
+            ViewBag.NewPetType = new PetType();
 
             return View(hpcontext);
         }
+
+
 
         // GET: PetTypes/Details/5
         public async Task<IActionResult> Details(int? id)
