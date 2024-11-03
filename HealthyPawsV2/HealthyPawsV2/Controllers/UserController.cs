@@ -95,6 +95,7 @@ public class UserController : Controller
 		user.NormalizedUserName = user.Email.ToUpper();
 		user.NormalizedEmail = user.Email.ToUpper();
 		user.PhoneNumber = user.phone1;
+		user.status = true;
 
 		// Create password
 		string password = $"{char.ToUpper(user.name[0])}{user.name.Substring(1, 2).ToLower()}.{char.ToLower(user.surnames[0])}123";
@@ -129,7 +130,9 @@ public class UserController : Controller
 		// Assign role
 		if (string.IsNullOrEmpty(role))
 		{
+			//When role is null, the vet is adding an user, so the role should be 'User'
 			var resultRole = await _userManager.AddToRoleAsync(user, "User");
+
 			if (!resultRole.Succeeded)
 			{
 				foreach (var error in resultRole.Errors)
@@ -138,6 +141,11 @@ public class UserController : Controller
 				}
 				return View(user); // Return on error with model state
 			}
+		}
+		else
+		{
+			//Asign role in dropdown to the user
+			var resultRole = await _userManager.AddToRoleAsync(user, role);
 		}
 
 		// Redirect to index if everything succeeded
