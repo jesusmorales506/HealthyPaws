@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
 using Microsoft.AspNetCore.Identity;
+using HealthyPawsV2.Utils;
 
 namespace HealthyPawsV2.Controllers
 {
@@ -14,11 +15,13 @@ namespace HealthyPawsV2.Controllers
     {
         private readonly HPContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AppointmentsController(HPContext context, UserManager<ApplicationUser> userManager)
+        public AppointmentsController(HPContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: Appointments
@@ -61,8 +64,18 @@ namespace HealthyPawsV2.Controllers
             "DisplayName"
             );
 
-            //ViewData["Pets"] = new SelectList(_context.PetFiles, "petFileId", "name");
-            //ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
+            //Get users with "User" role for Dueño dropdown in create page
+            var ownersTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "User");
+            ownersTask.Wait();
+            var owners = ownersTask.Result;
+            ViewData["Owners"] = new SelectList(owners, "Id", "name");
+
+
+            ////Get users with "Vet" role for Veterinario dropdown in create page
+            var vetsTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "Vet");
+            vetsTask.Wait();
+            var vets = vetsTask.Result.Where(v => v.status);
+            ViewData["Vets"] = new SelectList(vets, "Id", "name");
 
             ViewBag.NoResultados = appointmentList.Count == 0;
 
@@ -96,6 +109,7 @@ namespace HealthyPawsV2.Controllers
         {
             ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
+
             return View();
         }
 

@@ -1,6 +1,7 @@
 ﻿using HealthyPawsV2.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Security.Claims;
 
 namespace HealthyPawsV2.Utils
@@ -21,9 +22,9 @@ namespace HealthyPawsV2.Utils
             }
 
             var userIdsInRole = await _userManager.GetUsersInRoleAsync(roleName);
-            var usersInRole = _userManager.Users.Where(u => userIdsInRole.Contains(u)).ToList();
+            var usersInRole = _userManager.Users.Where(u => userIdsInRole.Contains(u)).ToListAsync();
 
-            return usersInRole.ToList();
+            return usersInRole.Result;
         }
 
         //Get logged user
