@@ -1,42 +1,35 @@
 ﻿@model IEnumerable<HealthyPawsV2.DAL.PetBreed>
 
-<style>
-    .color {
-        background-color: darkgrey;
-    }
-</style>
-
-<div>
-    <h1 style="text-align: center">Módulo de Raza Mascota</h1>
-</div>
 
 
-<div class="row">
-    <div class="col-md-6">
-        @* <a asp-action="Create" class="btn btn-primary">Añadir Raza de Mascota</a> *@
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AñadirRaza">Añadir Raza de Mascota</button>
-    </div>
-    <div class="col-md-3" style="margin-left: 250px">
+<!--This is a Searh Bar to Look for the names of the Pets in case we want to find any specific of them-->
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
         <form asp-action="Index" method="get" class="form-inline">
             <div class="form-group mr-2">
-                <input type="text" id="searchPetBreed" name="searchPetBreed" class="form-control" style="width: 300px; margin-bottom: 2%" />
+                <input type="text" id="searchPetBreed" name="searchPetBreed" class="form-control rounded-input" placeholder="Buscar Raza de Mascota..." />
             </div>
-            <p></p>
-            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
         </form>
-        <p></p>
+    </div>
+</div>
+
+<p></p>
+<div class="row">
+    <div class="col-md-6">
+        <button type="button" class="btn  colorButton" data-bs-toggle="modal" data-bs-target="#AñadirRaza">Añadir Raza de Mascota</button>
     </div>
 </div>
 <br />
+
 <table class="table table-bordered">
     <thead class="color">
         <tr>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.First().petBreedId)</th>
-            <th>@Html.DisplayNameFor(model => model.First().name)</th>
-            <th>@Html.DisplayNameFor(model => model.First().status)</th>
-            <th>@Html.DisplayNameFor(model => model.First().petTypeId)</th>
-            <th>Acciones</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().petBreedId)</th>
+            <th class ="text-white">@Html.DisplayNameFor(model => model.First().name)</th>
+            <th class ="text-white">@Html.DisplayNameFor(model => model.First().status)</th>
+            <th class ="text-white">@Html.DisplayNameFor(model => model.First().petTypeId)</th>
+            <th class ="text-white">Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -70,7 +63,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Crear Raza de Mascota</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="card">

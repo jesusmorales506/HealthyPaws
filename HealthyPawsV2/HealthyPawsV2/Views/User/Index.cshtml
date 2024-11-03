@@ -1,4 +1,5 @@
-﻿@model IEnumerable<HealthyPawsV2.DAL.ApplicationUser>
+﻿@using HealthyPawsV2.Utils
+@model IEnumerable<HealthyPawsV2.DAL.ApplicationUser>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,26 +14,20 @@
     }
 </style>
 
-<br />
-<br />
-
-
-
-
+<!--This is a Searh Bar to Look for the names of the Pets in case we want to find any specific of them-->
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="userSearch" name="userSearch" class="form-control rounded-input" placeholder="Buscar Usuario..." />
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-6">
-        <a asp-action="Create" class="btn btn-primary">Añadir Usuarios</a>
-    </div>
-    <div class="col-md-3" style="margin-left: 250px">
-        <form asp-action="Index" method="get" class="form-inline">
-            <div class="form-group mr-2">
-                <input type="text" id="userSearch" name="userSearch" class="form-control" style="width: 300px;" placeholder="Buscar usuario..." />
-            </div>
-            <p></p>
-            <button type="submit" class="btn btn-primary" style="margin-left: 75%" >Buscar</button>
-        </form>
-        <p></p>
+        <button type="button" class="btn  colorButton" data-bs-toggle="modal" data-bs-target="#AddUser">Añadir Usuarios</button>
     </div>
 </div>
 
@@ -78,6 +73,243 @@
 
     </div>
 </div>
+
+
+@* Modals for Users *@
+<div class="modal fade" id="AddUser" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserLabel">Añadir Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="userForm" asp-action="Create">
+                            <div class="text-danger" id="validationSummary"></div>
+
+                            <div class="form-group">
+                                <label for="idType">Tipo de ID</label>
+                                <select id="idType" class="form-control" required>
+                                    <option value=""></option>
+                                    <option value="Nacional">Nacional</option>
+                                    <option value="Extranjero">Extranjero</option>
+                                    <option value="Nacionalizado">Nacionalizado</option>
+                                </select>
+                                <span class="text-danger" id="idTypeError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="idNumber">Número de ID</label>
+                                <input type="text" id="idNumber" class="form-control" required />
+                                <span class="text-danger" id="idNumberError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Nombre</label>
+                                <input type="text" id="name" class="form-control" required />
+                                <span class="text-danger" id="nameError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="surnames">Apellidos</label>
+                                <input type="text" id="surnames" class="form-control" required />
+                                <span class="text-danger" id="surnamesError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone1">Teléfono 1</label>
+                                <input type="tel" id="phone1" class="form-control" />
+                                <span class="text-danger" id="phone1Error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone2">Teléfono 2</label>
+                                <input type="tel" id="phone2" class="form-control" />
+                                <span class="text-danger" id="phone2Error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone3">Teléfono 3</label>
+                                <input type="tel" id="phone3" class="form-control" />
+                                <span class="text-danger" id="phone3Error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Email">Correo Electrónico</label>
+                                <input type="Email" id="Email" class="form-control" />
+                                <span class="text-danger" id="EmailError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="province">Provincia</label>
+                                <select id="province" class="form-control" required>
+                                    <option value="">Seleccione una provincia</option>
+                                </select>
+                                <span class="text-danger" id="provinceError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="canton">Cantón</label>
+                                <select id="canton" class="form-control" disabled>
+                                    <option value="">Seleccione un cantón</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="district">Distrito</label>
+                                <select id="district" class="form-control" disabled>
+                                    <option value="">Seleccione un distrito</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="hidden" id="provinceName" value="" />
+                                <input type="hidden" id="cantonName" value="" />
+                                <input type="hidden" id="districtName" value="" />
+                            </div>
+
+                            <div class="form-group">
+                                @if (RolesUtils.LoggedUserRole(User, "Admin"))
+                                {
+                                    <label class="control-label">Role</label>
+                                    <select name="role" class="form-control">
+                                        <option value="">Select a role</option>
+                                        @foreach (var role in ViewBag.Roles)
+                                        {
+                                            <option value="@role">@role</option>
+                                        }
+                                    </select>
+                                }
+                            </div> 
+
+                            <br />
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Crear</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        document.getElementById('idNumber').addEventListener('input', function () {
+            var cedula = document.getElementById('idNumber').value;
+            if (cedula.length === 9 && document.getElementById('idType').value === "Nacional") {
+                fetch(`/api/cedulas/${cedula}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.nombre && data.apellidos) {
+                            document.getElementById('name').value = data.nombre || '';
+                            document.getElementById('surnames').value = data.apellidos || '';
+                        } else {
+                            alert("No se encontró información para esta cédula.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert(`Ocurrió un error al realizar la validación: ${error.message}`);
+                    });
+            } else {
+                document.getElementById('name').value = '';
+                document.getElementById('surnames').value = '';
+            }
+        });
+
+        document.getElementById('idType').addEventListener('change', function () {
+            var idType = this.value;
+            document.getElementById('name').readOnly = idType === "Nacional";
+            document.getElementById('surnames').readOnly = idType === "Nacional";
+        });
+
+        let selectedProvinceName = '';
+        let selectedCantonName = '';
+        let selectedDistrictName = '';
+
+        fetch('/api/ubicaciones/provincias')
+            .then(response => response.json())
+            .then(data => {
+                const provinceSelect = document.getElementById('province');
+                for (const [id, name] of Object.entries(data)) {
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = name;
+                    provinceSelect.appendChild(option);
+                }
+            });
+
+        document.getElementById('province').addEventListener('change', function () {
+            const provinceId = this.value;
+            const selectedOption = this.options[this.selectedIndex];
+            selectedProvinceName = selectedOption.textContent;
+            document.getElementById('provinceName').value = selectedProvinceName;
+
+            fetch(`/api/ubicaciones/provincias/${provinceId}/cantones`)
+                .then(response => response.json())
+                .then(data => {
+                    const cantonSelect = document.getElementById('canton');
+                    cantonSelect.innerHTML = '<option value="">Seleccione un cantón</option>';
+                    for (const [id, name] of Object.entries(data)) {
+                        const option = document.createElement('option');
+                        option.value = id;
+                        option.textContent = name;
+                        cantonSelect.appendChild(option);
+                    }
+                    cantonSelect.disabled = false;
+                    document.getElementById('district').innerHTML = '<option value="">Seleccione un distrito</option>';
+                    document.getElementById('district').disabled = true;
+                });
+        });
+
+        document.getElementById('canton').addEventListener('change', function () {
+            const provinceId = document.getElementById('province').value;
+            const cantonId = this.value;
+            const selectedOption = this.options[this.selectedIndex];
+            selectedCantonName = selectedOption.textContent;
+
+            document.getElementById('cantonName').value = selectedCantonName;
+
+            fetch(`/api/ubicaciones/provincias/${provinceId}/canton/${cantonId}/distritos`)
+                .then(response => response.json())
+                .then(data => {
+                    const districtSelect = document.getElementById('district');
+                    districtSelect.innerHTML = '<option value="">Seleccione un distrito</option>';
+                    for (const [id, name] of Object.entries(data)) {
+                        const option = document.createElement('option');
+                        option.value = id;
+                        option.textContent = name;
+                        districtSelect.appendChild(option);
+                    }
+                    districtSelect.disabled = false;
+                });
+        });
+
+        document.getElementById('district').addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            selectedDistrictName = selectedOption.textContent;
+
+            document.getElementById('districtName').value = selectedDistrictName;
+        });
+    </script>
+}
+
+
+
 
 
 

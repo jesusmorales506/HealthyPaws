@@ -21,3 +21,20 @@ body {
   margin-bottom: 60px;
 }
 
+.colorButton {
+    background-color: #B25A28;
+    color: White;
+}
+
+.rounded-input {
+    border-radius: 20px; 
+    border: 1px solid #ccc; 
+    padding: 10px; 
+    width: 100%; 
+}
+
+.color {
+    background-color: #698457;
+}
+
+

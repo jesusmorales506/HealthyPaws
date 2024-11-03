@@ -41,6 +41,8 @@ namespace HealthyPawsV2.Controllers
                 ViewBag.NoResultados = false;
             }
 
+
+
             return View(hpContext);
 
 

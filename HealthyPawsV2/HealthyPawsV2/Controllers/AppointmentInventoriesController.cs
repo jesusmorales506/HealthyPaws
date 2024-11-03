@@ -101,7 +101,7 @@ namespace HealthyPawsV2.Controllers
             // ViewData["inventoryID"] = new SelectList(_context.Inventories, "inventoryId", "name", appointmentInventory.inventoryID);
             ViewData["inventoryID"] = new SelectList(_context.Inventories.Where(i => i.category == "Medicamento"),"inventoryId", "name", appointmentInventory.inventoryID);
             ViewData["appointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId", appointmentInventory.appointmentId);
-            return View(appointmentInventory);
+            return View();
         }
 
         // GET: AppointmentInventories/Edit/5
@@ -119,7 +119,12 @@ namespace HealthyPawsV2.Controllers
             }
             ViewData["appointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId", appointmentInventory.appointmentId);
             ViewData["inventoryID"] = new SelectList(_context.Inventories, "inventoryId", "brand", appointmentInventory.inventoryID);
-            return View(appointmentInventory);
+
+
+
+
+
+            return View();
         }
 
         // POST: AppointmentInventories/Edit/5

@@ -33,8 +33,9 @@ public class UserController : Controller
 		{
 			ViewData["NoResultados"] = false;
 		}
+        ViewBag.Roles = await RolesUtils.GetAllRoles(_roleManager);
 
-		return View(usuarios);
+        return View(usuarios);
 	}
 	
     

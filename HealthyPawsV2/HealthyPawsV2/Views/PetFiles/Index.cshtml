@@ -1,49 +1,47 @@
 ﻿@model IEnumerable<HealthyPawsV2.DAL.PetFile>
 
-<style>
-    .color {
-        background-color: darkgrey;
-    }
-</style>
 
-<div>
-    <h1 style="text-align: center">Módulo de Mascotas</h1>
-</div>
-
-
-<div class="row">
-    <div class="col-md-6">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AbrirExpediente">Abrir Expediente</button>
-    </div>
-    <div class="col-md-3" style="margin-left: 250px">
+<!--This is a Searh Bar to Look for the names of the Pets in case we want to find any specific of them-->
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
         <form asp-action="Index" method="get" class="form-inline">
             <div class="form-group mr-2">
-                <input type="text" id="searchPetFile" name="searchPetFile" class="form-control" style="width: 300px; margin-bottom: 2%" />
+                <input type="text" id="searchPetFile" name="searchPetFile" class="form-control rounded-input" placeholder="Buscar expediente..." />
             </div>
-            <p></p>
-            <button type="submit" class="btn btn-primary" style="margin-left: 75%">Buscar</button>
         </form>
-        <p></p>
     </div>
 </div>
 
+
+
+<!--This is the Button that we use to Create New Pets-->
+<div class="row ">
+    <div class="col-md-6">
+        <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AbrirExpediente">Abrir Expediente</button>
+    </div>
+
+    
+</div>
+<br />
+
+<!--Table with results of the Pets we have in the System-->
 <table class="table table-bordered">
     <thead class="color">
         <tr>
-            <th>@Html.DisplayNameFor(model => model.First().petFileId)</th>
-            <th>@Html.DisplayNameFor(model => model.First().dueno.name)</th>
-            <th>@Html.DisplayNameFor(model => model.name)</th>
-            <th>@Html.DisplayNameFor(model => model.PetBreed.PetType.name)</th>
-            <th>@Html.DisplayNameFor(model => model.PetBreed.name)</th>
-            <th>@Html.DisplayNameFor(model => model.gender)</th>
-            <th>@Html.DisplayNameFor(model => model.age)</th>
-            <th>@Html.DisplayNameFor(model => model.weight)</th>
-            <th>@Html.DisplayNameFor(model => model.castration)</th>
-            <th>@Html.DisplayNameFor(model => model.description)</th>
-            <th>@Html.DisplayNameFor(model => model.status)</th>
-            <th>@Html.DisplayNameFor(model => model.creationDate)</th>
-            <th>@Html.DisplayNameFor(model => model.vaccineHistory)</th>
-            <th>Acciones</th>
+            <th class ="text-white">@Html.DisplayNameFor(model => model.First().petFileId)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().dueno.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.PetBreed.PetType.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.PetBreed.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.gender)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.age)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.weight)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.castration)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.description)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.status)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.creationDate)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.vaccineHistory)</th>
+            <th class="text-white">Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -73,6 +71,8 @@
     </tbody>
 </table>
 
+
+<!--In case there is no Pets under the name looked-->
 @if ((bool)ViewBag.NoResultados)
 {
     <p>No se encuentran resultados de búsqueda.</p>
@@ -81,7 +81,7 @@
 <br /> 
 
 
-
+<!--This is the Modal for the New PetFiles we are going to create-->
 <div class="modal fade" id="AbrirExpediente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

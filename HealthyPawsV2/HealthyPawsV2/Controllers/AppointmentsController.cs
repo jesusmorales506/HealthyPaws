@@ -29,19 +29,40 @@ namespace HealthyPawsV2.Controllers
                 .Include(a => a.owner)
                 .AsQueryable();
 
-
-
             if (!string.IsNullOrEmpty(searchAppointment))
             {
                 appointments = appointments.Where(a =>
                     a.AppointmentId.ToString().Contains(searchAppointment) ||
-                    //a.petId.name.Contains(searchAppointment) ||
+                    a.PetFile.name.Contains(searchAppointment) ||
                     a.owner.UserName.Contains(searchAppointment) ||
                     a.veterinario.UserName.Contains(searchAppointment)
                 );
             }
 
             var appointmentList = await appointments.ToListAsync();
+
+
+            ViewData["Users"] = new SelectList(_context.ApplicationUser
+                .Select(u => new
+                {
+                    Id = u.Id,
+                    DisplayName = $"{u.name} {u.surnames} - {u.idNumber}"
+                }), "Id", "DisplayName");
+
+            ViewData["Pets"] = new SelectList(
+            from pet in _context.PetFiles
+            join user in _context.ApplicationUser on pet.idNumber equals user.Id 
+            select new
+            {
+            Id = pet.petFileId,
+            DisplayName = $"{pet.name} - {user.name} {user.surnames} - {user.idNumber}"
+            },
+            "Id",
+            "DisplayName"
+            );
+
+            //ViewData["Pets"] = new SelectList(_context.PetFiles, "petFileId", "name");
+            //ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
 
             ViewBag.NoResultados = appointmentList.Count == 0;
 
@@ -115,23 +136,30 @@ namespace HealthyPawsV2.Controllers
             }
 
             var appointment = await _context.Appointments.FindAsync(id);
-
-            ViewBag.StatusOptions = new SelectList(new List<string>
-            {
-                "Completada",
-                "Agendada",
-                "Cancelada",
-                "Pendiente"
-            });
-
             if (appointment == null)
             {
                 return NotFound();
             }
+
+            // Cargar opciones de estado
+            ViewBag.StatusOptions = new SelectList(new List<string>
+    {
+        "Completada",
+        "Agendada",
+        "Cancelada",
+        "Pendiente"
+    });
+
+            // Cargar datos de mascotas y usuarios
             ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "name");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name");
-            return View(appointment);
 
+            // Cargar opciones de medicamentos
+            ViewData["Medicamentos"] = new SelectList(_context.Inventories
+                .Where(i => i.category == "Medicamento"), "inventoryId", "name");
+
+
+            return View(appointment);
         }
 
         // POST: Appointments/Edit/5
