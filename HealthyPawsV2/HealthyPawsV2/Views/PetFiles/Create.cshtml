@@ -78,8 +78,9 @@
                 <label asp-for="castration" class="control-label"></label>
                 <select asp-for="castration" class="form-control">
                     <option value="" disabled selected>Seleccione el tipo de Castración</option>
-                    <option value="Hembra">Ovariohisterectomía</option>
-                    <option value="Macho">Orquiectomía</option>
+                    <option value="No">No</option>
+                    <option value="Ovariohisterectomía">Ovariohisterectomía</option>
+                    <option value="Orquiectomía">Orquiectomía</option>
                 </select>
                 <span asp-validation-for="castration" class="text-danger"></span>
             </div>
