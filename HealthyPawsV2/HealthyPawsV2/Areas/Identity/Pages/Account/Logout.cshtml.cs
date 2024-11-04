@@ -29,7 +29,16 @@ namespace HealthyPawsV2.Areas.Identity.Pages.Account
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
 
-            return RedirectToPage("/Account/Login");
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                // Redirect to the custom logout confirmation page
+                return RedirectToPage("/Account/LogoutConfirmation");
+            }
         }
+
     }
 }
