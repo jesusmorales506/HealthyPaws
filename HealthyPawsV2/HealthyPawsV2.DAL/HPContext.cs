@@ -34,5 +34,7 @@ namespace HealthyPawsV2.DAL
 
         public DbSet<ApplicationUser> ApplicationUser { get; set; } //List of Application User
 
-    }
+		public DbSet<Contact> Contacts { get; set; } //List of Contact
+
+	}
 }
