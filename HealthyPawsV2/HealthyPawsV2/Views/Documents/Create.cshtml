@@ -12,7 +12,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -39,9 +39,18 @@
                 <span asp-validation-for="category" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="fileType" class="control-label"></label>
                 <input asp-for="fileType" class="form-control" />
+                <span asp-validation-for="fileType" class="text-danger"></span>
+            </div> *@
+
+            <div class="form-group">
+                <label asp-for="fileType" class="control-label"></label>
+                @* <input type="file" name="File"  class="form-control" accept=".png, .jpg, .jpeg  .pdf .docx .doc"/> *@
+                <input type="file" name="File" class="form-control" accept="image/png, image/jpeg, application/pdf, 
+                                application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, 
+                                application/vnd.ms-excel, application/vnd.ms-excel.sheet.macroEnabled.12, application/vnd.ms-excel.binary.sheet" />
                 <span asp-validation-for="fileType" class="text-danger"></span>
             </div>
 

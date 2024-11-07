@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -35,6 +36,9 @@ namespace HealthyPawsV2.DAL
 
         [DisplayName("Tipo de Archivo")]
         public byte[] fileType { get; set; }
+
+        public string FileTypeMime { get; set; }
+
 
         [DisplayName("Fecha de Creación")]
         public DateTime FechaCreacion { get; set; }

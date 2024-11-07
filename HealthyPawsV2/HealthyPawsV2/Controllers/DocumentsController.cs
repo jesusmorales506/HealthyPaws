@@ -56,10 +56,18 @@ namespace HealthyPawsV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,documentId,petFileId,name,category,fileType,status")] Document document)
+        public async Task<IActionResult> Create([Bind("AppointmentId,documentId,petFileId,name,category,fileType,status,fileType")] Document document, IFormFile File)
         {
             if (ModelState.IsValid)
             {
+                if (File != null && File.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await File.CopyToAsync(memoryStream);
+                        document.fileType = memoryStream.ToArray();
+                    }
+                }
                 _context.Add(document);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -171,6 +179,19 @@ namespace HealthyPawsV2.Controllers
         private bool DocumentExists(int id)
         {
             return _context.Documents.Any(e => e.documentId == id);
+        }
+
+
+        //This is to download the files
+        public IActionResult Download(int id)
+        {
+            var document = _context.Documents.FirstOrDefault(d => d.documentId == id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+
+            return File(document.fileType, "application/octet-stream", document.name);
         }
     }
 }
