@@ -34,7 +34,7 @@ namespace HealthyPawsV2.DAL
         public string category { get; set; }
 
         [DisplayName("Tipo de Archivo")]
-        public byte fileType { get; set; }
+        public byte[] fileType { get; set; }
 
         [DisplayName("Fecha de Creación")]
         public DateTime FechaCreacion { get; set; }
