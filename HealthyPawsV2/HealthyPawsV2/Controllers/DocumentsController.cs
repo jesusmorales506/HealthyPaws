@@ -6,21 +6,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
+using Microsoft.AspNetCore.Identity;
 
 namespace HealthyPawsV2.Controllers
 {
     public class DocumentsController : Controller
     {
         private readonly HPContext _context;
+        
 
         public DocumentsController(HPContext context)
         {
             _context = context;
+            
+
         }
 
         // GET: Documents
         public async Task<IActionResult> Index()
         {
+            ViewData["AppointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId");
+
+            var petFiles = from pf in _context.PetFiles
+                           join u in _context.ApplicationUser on pf.idNumber equals u.Id
+                           select new SelectListItem
+                           {
+                               Value = pf.petFileId.ToString(),  // Value debe ser un string
+                               Text = $"{pf.petFileId} - {pf.name} - {u.idNumber}"
+                           };
+
+            ViewBag.petFileId = new SelectList(petFiles, "Value", "Text");
+
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
             return View(await _context.Documents.ToListAsync());
         }
 
