@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HealthyPawsV2.DAL.Document>
+﻿@* @model IEnumerable<HealthyPawsV2.DAL.Document>
 
 @{
     ViewData["Title"] = "Index";
@@ -86,4 +86,154 @@
         </tr>
 }
     </tbody>
+</table> *@
+@model IEnumerable<HealthyPawsV2.DAL.Document>
+
+@{
+    ViewData["Title"] = "Módulo de Exámenes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .file-icon {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+</style>
+
+<div>
+    <h1 style="text-align: center">Módulo de Exámenes</h1>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-primary">Añadir Examen</a>
+    </div>
+    <div class="col-md-6">
+        <form asp-action="Index" method="get" class="form-inline float-right">
+            <div class="form-group mr-2">
+                <input type="text" id="searchPetType" name="searchPetType" class="form-control" style="width: 300px;" placeholder="Buscar por nombre..." />
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.AppointmentId)</th>
+            <th>@Html.DisplayNameFor(model => model.petFileId)</th>
+            <th>@Html.DisplayNameFor(model => model.name)</th>
+            <th>@Html.DisplayNameFor(model => model.category)</th>
+            <th>@Html.DisplayNameFor(model => model.fileType)</th>
+            <th>@Html.DisplayNameFor(model => model.status)</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.AppointmentId)</td>
+                <td>@Html.DisplayFor(modelItem => item.petFileId)</td>
+                <td>@Html.DisplayFor(modelItem => item.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.category)</td>
+                <td>
+                    @if (item.fileType != null && item.fileType.Length > 0)
+                    {
+                        
+                        var fileTypeMagicNumber = GetFileTypeMagicNumber(item.fileType);
+
+                        if (fileTypeMagicNumber == "image")
+                        {
+                             <img class="file-icon" src="data:image;base64,@Convert.ToBase64String(item.fileType)" alt="@item.name" /> 
+                            
+                        }
+                        else if (fileTypeMagicNumber == "pdf")
+                        {
+                            @* <a href="data:application/pdf;base64,@Convert.ToBase64String(item.fileType)" download="@item.name">Descargar PDF</a> *@
+
+                            <a href="data:application/pdf;base64,@Convert.ToBase64String(item.fileType)" download="@item.name">
+                                <img src="/images/pdf.png" alt="PDF" class="file-icon" />
+                            </a>
+                        }
+                        else if (fileTypeMagicNumber == "word")
+                        {
+                            <a href="data:application/msword;base64,@Convert.ToBase64String(item.fileType)" download="@item.name">
+                                <img src="/images/doc.png" alt="PDF" class="file-icon" />
+                            </a>
+                        }
+                        else if (fileTypeMagicNumber == "excel")
+                        {
+                            <a href="data:application/vnd.ms-excel;base64,@Convert.ToBase64String(item.fileType)" download="@item.name">Descargar Excel</a>
+                        }
+                        else
+                        {
+                            <span>Archivo no soportado</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>No hay archivo</span>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.status)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.documentId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.documentId" class="btn btn-secondary btn-sm">Detalles</a>
+                    <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.documentId">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+
+
+
+
+
+@functions {
+    private string GetFileTypeMagicNumber(byte[] fileBytes)
+    {
+        if (fileBytes.Length > 4)
+        {
+            
+            if (fileBytes[0] == 0xFF && fileBytes[1] == 0xD8)
+                return "image"; 
+            if (fileBytes[0] == 0x89 && fileBytes[1] == 0x50 && fileBytes[2] == 0x4E && fileBytes[3] == 0x47)
+                return "image"; 
+
+            
+            if (fileBytes[0] == 0x25 && fileBytes[1] == 0x50 && fileBytes[2] == 0x44 && fileBytes[3] == 0x46)
+                return "pdf"; 
+
+            
+            if (fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+                return "word"; 
+
+            
+            if (fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+                return "excel"; 
+
+            
+        }
+
+        return "unknown"; 
+    }
+}
+
+
+
