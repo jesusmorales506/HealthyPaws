@@ -25,19 +25,37 @@ namespace HealthyPawsV2.Controllers
         // GET: Documents
         public async Task<IActionResult> Index()
         {
-            ViewData["AppointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId");
+            
 
-            var petFiles = from pf in _context.PetFiles
-                           join u in _context.ApplicationUser on pf.idNumber equals u.Id
-                           select new SelectListItem
-                           {
-                               Value = pf.petFileId.ToString(),  // Value debe ser un string
-                               Text = $"{pf.petFileId} - {pf.name} - {u.idNumber}"
-                           };
+            ViewData["AppointmentId"] = new SelectList(
+            from appointment in _context.Appointments
+            join petFile in _context.PetFiles on appointment.petFileId equals petFile.petFileId
+            join user in _context.ApplicationUser on petFile.idNumber equals user.Id
+            select new
+            {
+                AppointmentId = appointment.AppointmentId,
+                DisplayText = $"{appointment.AppointmentId} - {petFile.name} - {user.name} - {user.idNumber}  "
+             },
+            "AppointmentId", 
+            "DisplayText"    
+            );
 
-            ViewBag.petFileId = new SelectList(petFiles, "Value", "Text");
+            ViewData["petFileName"] = new SelectList(
+            from pf in _context.PetFiles
+            select new SelectListItem
+            {
+                Value = pf.petFileId.ToString(), 
+                Text = $"{pf.petFileId} - {pf.name}"  
+            },
+                "Value",  
+                "Text"    
+                );
+
+
+            //ViewBag.petFileId = new SelectList(petFiles, "Value", "Text");
 
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
+
             return View(await _context.Documents.ToListAsync());
         }
 

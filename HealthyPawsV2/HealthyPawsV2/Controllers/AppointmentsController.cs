@@ -52,6 +52,7 @@ namespace HealthyPawsV2.Controllers
                     DisplayName = $"{u.name} {u.surnames} - {u.idNumber}"
                 }), "Id", "DisplayName");
 
+
             ViewData["Pets"] = new SelectList(
             from pet in _context.PetFiles
             join user in _context.ApplicationUser on pet.idNumber equals user.Id 

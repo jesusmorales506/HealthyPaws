@@ -181,11 +181,13 @@
                     <div class="card-body">
                         <form id="expedienteForm" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="appointmentId">Seleccione la cita</label>
-                                <select id="appointmentId" name="appointmentId" class="form-control">
-                                    <option value="1">Cita 1</option>
-                                    <option value="2">Cita 2</option>
-                                    <option value="3">Cita 3</option>
+                                <label for="appointmentId" class="control-label">Seleccione la cita</label>
+                                <select name="appointmentId" id="appointmentId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione la cita</option>
+                                    @foreach (var appointment in ViewData["AppointmentId"] as SelectList)
+                                    {
+                                        <option value="@appointment.Value">@appointment.Text</option>
+                                    }
                                 </select>
                                 <span class="text-danger" id="appointmentIdError"></span>
                             </div>
@@ -195,7 +197,7 @@
                                 <label for="petFileId" class="control-label">Seleccione el expediente de la mascota</label>
                                 <select name="petFileId" id="petFileId" class="form-control" required>
                                     <option value="" disabled selected>Seleccione el expediente</option>
-                                    @foreach (var pet in ViewBag.petFileId as SelectList)
+                                    @foreach (var pet in ViewData["petFileName"] as SelectList)
                                     {
                                         <option value="@pet.Value">@pet.Text</option>
                                     }
