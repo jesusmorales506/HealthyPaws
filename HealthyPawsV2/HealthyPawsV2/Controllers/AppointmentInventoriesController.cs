@@ -95,7 +95,9 @@ namespace HealthyPawsV2.Controllers
             {
                 _context.Add(appointmentInventory);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Appointment));
+                //return RedirectToAction(nameof(Edit), new { appointmentId = appointmentInventory.appointmentId });
+                return RedirectToAction(nameof(AppointmentsController.Edit), "Appointment", new {appointmentInventory.appointmentId });
             }
 
             // ViewData["inventoryID"] = new SelectList(_context.Inventories, "inventoryId", "name", appointmentInventory.inventoryID);

@@ -104,7 +104,7 @@
                                 <label for="ownerId" class="control-label">Nombre del Dueño</label>
                                 <select name="ownerId" class="form-control" required>
                                     <option value="" disabled selected>Seleccione el Dueño</option>
-                                    @foreach (var owner in ViewBag.Owners)
+                                    @foreach (var owner in (SelectList)ViewData["Owners"])
                                     {
                                         <option value="@owner.Value">@owner.Text</option>
                                     }
@@ -112,11 +112,12 @@
                                 <span validation-for="ownerId" class="text-danger"></span>
                             </div>
 
+
                             <div class="form-group">
                                 <label for="vetId" class="control-label">Nombre del Veterinario</label>
                                 <select name="vetId" class="form-control" required>
                                     <option value="" disabled selected>Seleccione el Veterinario</option>
-                                    @foreach (var vet in ViewBag.Vets)
+                                    @foreach (var vet in (SelectList)ViewData["Vets"])
                                     {
                                         <option value="@vet.Value">@vet.Text</option>
                                     }

@@ -104,7 +104,7 @@
 
                             <div class="form-group">
                                 <label for="appointmentId" class="control-label">Numéro de Cita</label>
-                                <input id="appointmentId" name="appointmentId" class="form-control" value="@Model.AppointmentId" />
+                                <input id="appointmentId" name="appointmentId" class="form-control" value="@Model.AppointmentId" readonly/>
                                 <span validation-for="appointmentId" class="text-danger"></span>
                             </div>
 
@@ -153,8 +153,9 @@
 </div>
 
 
-@section Scripts {
+@* @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
+} *@
+

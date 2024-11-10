@@ -69,14 +69,24 @@ namespace HealthyPawsV2.Controllers
             var ownersTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "User");
             ownersTask.Wait();
             var owners = ownersTask.Result;
-            ViewData["Owners"] = new SelectList(owners, "Id", "name");
+            var ownerList = owners.Select(user => new
+            {
+                Id = user.Id, // Asegúrate de que la propiedad sea "Id"
+                DisplayName = $"{user.name} {user.surnames} - {user.idNumber}" // Asegúrate de usar las propiedades correctas
+            }).ToList();
+            ViewData["Owners"] = new SelectList(ownerList, "Id", "DisplayName");
 
 
             ////Get users with "Vet" role for Veterinario dropdown in create page
             var vetsTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "Vet");
             vetsTask.Wait();
             var vets = vetsTask.Result.Where(v => v.status);
-            ViewData["Vets"] = new SelectList(vets, "Id", "name");
+            var vetList = vets.Select(vet => new
+            {
+                Id = vet.Id,
+                DisplayName = $"{vet.name} {vet.surnames} - {vet.idNumber}" 
+            }).ToList();
+            ViewData["Vets"] = new SelectList(vetList, "Id", "DisplayName");
 
             ViewBag.NoResultados = appointmentList.Count == 0;
 
