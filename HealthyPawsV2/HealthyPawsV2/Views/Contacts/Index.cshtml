@@ -5,44 +5,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<!-- Botón para crear un nuevo contacto -->
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn colorButton">Crear Nuevo Contacto</a>
+    </div>
+</div>
+<br />
+
+<!-- Tabla de contactos -->
+<table class="table table-bordered">
+    <thead class="color">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WhatsApp)
-            </th>
-            <th></th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().Email)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().Phone)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().WhatsApp)</th>
+            <th class="text-white">Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                <td>@Html.DisplayFor(modelItem => item.WhatsApp)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.WhatsApp)
+                    <a asp-action="Edit" asp-route-id="@item.contactId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.contactId" class="btn btn-secondary btn-sm">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.contactId" class="btn btn-danger btn-sm">Eliminar</a>
                 </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.contactId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.contactId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.contactId">Delete</a>
-            </td>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>
