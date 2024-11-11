@@ -40,5 +40,17 @@ $('.CrearMedicamentoBtn').click(function (event) {
     }.bind(this), 3000); 
 });
 
+$('.CrearExamenBtn').click(function (event) {
+
+    event.preventDefault();
+    toastr.options.positionClass = 'toast-top-center';
+    toastr.success('El Examen fue añadido correctamente a la cita.');
+
+    setTimeout(function () {
+        var form = $(this).closest('form');
+        form.submit();
+    }.bind(this), 3000);
+});
+
 
 

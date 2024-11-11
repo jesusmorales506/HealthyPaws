@@ -93,6 +93,8 @@ namespace HealthyPawsV2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AppointmentId,documentId,petFileId,name,category,fileType,status,fileType")] Document document, IFormFile File)
         {
+            document.status = true;
+
             if (ModelState.IsValid)
             {
                 if (File != null && File.Length > 0)

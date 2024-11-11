@@ -288,7 +288,36 @@ namespace HealthyPawsV2.Controllers
         }
 
 
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateDoc([Bind("AppointmentId,documentId,petFileId,name,category,fileType,status,fileType")] Document document, IFormFile File)
+        {
+            document.status = true;
+
+            if (ModelState.IsValid)
+            {
+                if (File != null && File.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await File.CopyToAsync(memoryStream);
+                        document.fileType = memoryStream.ToArray();
+                    }
+                }
+                _context.Add(document);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Edit), new { id = document.AppointmentId });
+            }
+
+            // Volver a llenar el ViewData en caso de error de validación
+            ViewData["AppointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId");
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "petFileId", document.petFileId);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
+
+            return View();
+        }
+
+
 
     }
 
