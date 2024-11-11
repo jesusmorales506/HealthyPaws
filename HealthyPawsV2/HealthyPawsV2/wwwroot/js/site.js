@@ -27,3 +27,18 @@ $('.BorrarElemento').click(function (event) {
 
 
 });
+
+$('.CrearMedicamentoBtn').click(function (event) {
+    
+    event.preventDefault();
+    toastr.options.positionClass = 'toast-top-center';
+    toastr.success('El medicamento fue añadido correctamente a la cita.');
+
+    setTimeout(function () {
+        var form = $(this).closest('form');
+        form.submit(); 
+    }.bind(this), 3000); 
+});
+
+
+

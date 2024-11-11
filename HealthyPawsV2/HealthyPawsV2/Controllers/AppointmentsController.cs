@@ -264,5 +264,32 @@ namespace HealthyPawsV2.Controllers
         {
             return _context.Appointments.Any(e => e.AppointmentId == id);
         }
+
+
+        //This a method ti add a med into the appointment
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateMed([Bind("appointmentInventoryId,appointmentId,inventoryID,dose,measuredose,status")] AppointmentInventory appointmentInventory)
+        {
+            appointmentInventory.status = true;
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(appointmentInventory);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Edit), new { id = appointmentInventory.appointmentId });
+                
+            }
+
+            // ViewData["inventoryID"] = new SelectList(_context.Inventories, "inventoryId", "name", appointmentInventory.inventoryID);
+            ViewData["inventoryID"] = new SelectList(_context.Inventories.Where(i => i.category == "Medicamento"), "inventoryId", "name", appointmentInventory.inventoryID);
+            ViewData["appointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId", appointmentInventory.appointmentId);
+            return View();
+        }
+
+
+        
+
     }
+
 }
