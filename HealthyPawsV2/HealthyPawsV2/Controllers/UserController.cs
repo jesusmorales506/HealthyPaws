@@ -23,7 +23,7 @@ public class UserController : Controller
 	[HttpGet]
 	public async Task<IActionResult> Index()
 	{
-		var usuarios = await _userManager.Users.Where(p => p.status).ToListAsync();
+		var usuarios = await _userManager.Users.ToListAsync();
 
 		if (usuarios != null && usuarios.Count == 0)
 		{
