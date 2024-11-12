@@ -71,8 +71,8 @@ namespace HealthyPawsV2.Controllers
             var owners = ownersTask.Result;
             var ownerList = owners.Select(user => new
             {
-                Id = user.Id, // Asegúrate de que la propiedad sea "Id"
-                DisplayName = $"{user.name} {user.surnames} - {user.idNumber}" // Asegúrate de usar las propiedades correctas
+                Id = user.Id,
+                DisplayName = $"{user.name} {user.surnames} - {user.idNumber}" 
             }).ToList();
             ViewData["Owners"] = new SelectList(ownerList, "Id", "DisplayName");
 
