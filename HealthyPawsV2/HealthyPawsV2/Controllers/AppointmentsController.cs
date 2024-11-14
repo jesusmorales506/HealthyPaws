@@ -30,6 +30,7 @@ namespace HealthyPawsV2.Controllers
             var appointments = _context.Appointments
                 .Include(a => a.PetFile)
                 .Include(a => a.owner)
+                .Include(a => a.vet)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchAppointment))
@@ -38,7 +39,7 @@ namespace HealthyPawsV2.Controllers
                     a.AppointmentId.ToString().Contains(searchAppointment) ||
                     a.PetFile.name.Contains(searchAppointment) ||
                     a.owner.UserName.Contains(searchAppointment) ||
-                    a.veterinario.UserName.Contains(searchAppointment)
+                    a.vet.UserName.Contains(searchAppointment)
                 );
             }
 
@@ -48,14 +49,14 @@ namespace HealthyPawsV2.Controllers
             ViewData["Users"] = new SelectList(_context.ApplicationUser
                 .Select(u => new
                 {
-                    Id = u.Id,
+                    u.Id,
                     DisplayName = $"{u.name} {u.surnames} - {u.idNumber}"
                 }), "Id", "DisplayName");
 
 
             ViewData["Pets"] = new SelectList(
             from pet in _context.PetFiles
-            join user in _context.ApplicationUser on pet.idNumber equals user.Id 
+            join user in _context.ApplicationUser on pet.ownerId equals user.Id 
             select new
             {
             Id = pet.petFileId,

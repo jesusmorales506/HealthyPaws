@@ -4,6 +4,7 @@ using HealthyPawsV2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthyPawsV2.DAL.Migrations
 {
     [DbContext(typeof(HPContext))]
-    partial class HPContextModelSnapshot : ModelSnapshot
+    [Migration("20241114022829_PetFileFieldRename")]
+    partial class PetFileFieldRename
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,6 +186,9 @@ namespace HealthyPawsV2.DAL.Migrations
 
                     b.Property<string>("vetId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("veterinarioId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("AppointmentId");
@@ -191,7 +197,7 @@ namespace HealthyPawsV2.DAL.Migrations
 
                     b.HasIndex("petFileId");
 
-                    b.HasIndex("vetId");
+                    b.HasIndex("veterinarioId");
 
                     b.ToTable("Appointment");
                 });
@@ -484,17 +490,15 @@ namespace HealthyPawsV2.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HealthyPawsV2.DAL.ApplicationUser", "vet")
+                    b.HasOne("HealthyPawsV2.DAL.ApplicationUser", "veterinario")
                         .WithMany()
-                        .HasForeignKey("vetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("veterinarioId");
 
                     b.Navigation("PetFile");
 
                     b.Navigation("owner");
 
-                    b.Navigation("vet");
+                    b.Navigation("veterinario");
                 });
 
             modelBuilder.Entity("HealthyPawsV2.DAL.AppointmentInventory", b =>

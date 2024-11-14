@@ -30,7 +30,7 @@ namespace HealthyPawsV2.Controllers
             ViewData["AppointmentId"] = new SelectList(
             from appointment in _context.Appointments
             join petFile in _context.PetFiles on appointment.petFileId equals petFile.petFileId
-            join user in _context.ApplicationUser on petFile.idNumber equals user.Id
+            join user in _context.ApplicationUser on petFile.ownerId equals user.Id
             select new
             {
                 AppointmentId = appointment.AppointmentId,

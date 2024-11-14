@@ -22,7 +22,7 @@ namespace HealthyPawsV2.DAL
         public int petBreedId { get; set; }
 
         [DisplayName("Dueño")] 
-        public string idNumber { get; set; }   
+        public string ownerId { get; set; }   
 
         [DisplayName("Nombre de Mascota")]
         public string name { get; set; }
@@ -67,7 +67,7 @@ namespace HealthyPawsV2.DAL
         //Here we are pulling the collections from the root entitys
         public PetBreed? PetBreed { get; set; }
 
-        public ApplicationUser? dueno { get; set; }
+        public ApplicationUser? Owner { get; set; }
 
 
         //ICollection
