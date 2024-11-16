@@ -25,6 +25,7 @@ namespace HealthyPawsV2.Controllers
 
         public async Task<IActionResult> Search(string GlobalSearch)
         {
+            //Agregar los contextos 
             var petTypeQuery = _context.PetTypes.AsQueryable();
             var usersQuery = _userManager.Users.AsQueryable();
 
@@ -39,6 +40,7 @@ namespace HealthyPawsV2.Controllers
                 .Include(a => a.vet)
                 .AsQueryable();
 
+            //Condicional de busqueda 
             if (!string.IsNullOrEmpty(GlobalSearch))
             {
                 petTypeQuery = petTypeQuery.Where(m => m.name.Contains(GlobalSearch));
@@ -49,15 +51,20 @@ namespace HealthyPawsV2.Controllers
 
             }
 
+            //Lista de los datos encontrados 
             var petTypeResult = await petTypeQuery.ToListAsync();
             var usersResult = await usersQuery.ToListAsync();
             var petBreedResult = await petBreedsQuery.ToListAsync();
             var appointmentsResult = await appointments.ToListAsync();
 
+
+            //Clasificar los ViewBag y los No result
             ViewBag.PetTypes = petTypeResult;
             ViewBag.Users = usersResult;
             ViewBag.PetBreeds = petBreedsQuery;
             ViewBag.Appointment = appointments;
+
+            // los No result
             ViewBag.NoResultadosPetTypes = petTypeResult.Count == 0;
             ViewBag.NoResultadosUsers = usersResult.Count == 0;
             ViewBag.NoResultadosPetBreeds = petBreedResult.Count == 0;
