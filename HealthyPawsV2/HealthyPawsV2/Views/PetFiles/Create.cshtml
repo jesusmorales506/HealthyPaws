@@ -23,11 +23,11 @@
             
             @* I Added this to upgrade the User's experience *@
             <div class="form-group">
-                <label asp-for="idNumber" class="control-label"></label>
-                <select asp-for="idNumber" class="form-control" asp-items="ViewBag.Users">
+                <label asp-for="ownerId" class="control-label"></label>
+                <select asp-for="ownerId" class="form-control" asp-items="ViewBag.Users">
                     <option value="" disabled selected>Seleccione al Dueño</option>
                 </select>
-                <span asp-validation-for="idNumber" class="text-danger"></span>
+                <span asp-validation-for="ownerId" class="text-danger"></span>
             </div>
 
             <div class="form-group">

@@ -77,7 +77,7 @@ namespace HealthyPawsV2.Controllers
         .Select(a => new
         {
             AppointmentId = a.AppointmentId,
-            DisplayName = $"{a.AppointmentId} - {a.PetFile.name} - {a.PetFile.idNumber}"
+            DisplayName = $"{a.AppointmentId} - {a.PetFile.name} - {a.PetFile.ownerId}"
         }), "AppointmentId", "DisplayName");
             return View();
         }

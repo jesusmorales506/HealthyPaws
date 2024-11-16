@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
 using Microsoft.AspNetCore.Identity;
+using HealthyPawsV2.Utils;
 
 namespace HealthyPawsV2.Controllers
 {
@@ -14,18 +15,20 @@ namespace HealthyPawsV2.Controllers
     {
         private readonly HPContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public PetFilesController(HPContext context, UserManager<ApplicationUser> userManager)
+        public PetFilesController(HPContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: PetFiles
         public async Task<IActionResult> Index(string searchPetFile)
         {
             var pets = _context.PetFiles
-                .Include(p => p.dueno)
+                .Include(p => p.Owner)
                 .Include(p => p.PetBreed)
                 .ThenInclude(b => b.PetType)
                 .Where(p => p.status)
@@ -42,13 +45,16 @@ namespace HealthyPawsV2.Controllers
             ViewBag.NoResultados = hpContext.Count == 0;
 
             //Properties for the Modal
-            ViewBag.Users = new SelectList(await _context.ApplicationUser
-                .Select(u => new
-                {
-                    Id = u.idNumber,
-                    DisplayName = $"{u.name} {u.surnames} - {u.idNumber}"
-                })
-                .ToListAsync(), "Id", "DisplayName");
+            //Get users with "User" role for Dueño dropdown in create page
+            var ownersTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "User");
+            ownersTask.Wait();
+            var owners = ownersTask.Result;
+            var ownerList = owners.Select(user => new
+            {
+                Id = user.Id, // AppUser "Id" Relation
+                DisplayName = $"{user.name} {user.surnames} - {user.idNumber}" // idNumber to display personal id of the user
+            }).ToList();
+            ViewData["Owners"] = new SelectList(ownerList, "Id", "DisplayName");
 
             ViewBag.PetTypes = new SelectList(await _context.PetTypes.ToListAsync(), "petTypeId", "name");
             ViewBag.PetBreeds = new SelectList(await _context.PetBreeds.ToListAsync(), "petBreedId", "name");
@@ -66,7 +72,7 @@ namespace HealthyPawsV2.Controllers
 
             var petFile = await _context.PetFiles
                 .Include(p => p.PetBreed)
-                .Include(p => p.dueno)
+                .Include(p => p.Owner)
                 .FirstOrDefaultAsync(m => m.petFileId == id);
 
             if (petFile == null)
@@ -101,7 +107,7 @@ namespace HealthyPawsV2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("petFileId,petBreedId,idNumber,name,petTypeId,gender,age,weight,creationDate,vaccineHistory,castration,description,status")] PetFile petFile)
+        public async Task<IActionResult> Create([Bind("petFileId,petBreedId,ownerId,name,petTypeId,gender,age,weight,creationDate,vaccineHistory,castration,description,status")] PetFile petFile)
         {
             petFile.creationDate = DateTime.Now.Date + DateTime.Now.TimeOfDay;
             petFile.status = true;
@@ -113,7 +119,7 @@ namespace HealthyPawsV2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name", petFile.petBreedId);
-            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.dueno);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.Owner);
             ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name", petFile.petTypeId);
             return View(petFile);
         }
@@ -132,7 +138,7 @@ namespace HealthyPawsV2.Controllers
                 return NotFound();
             }
             ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name", petFile.petBreedId);
-            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.dueno);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.Owner);
             ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name", petFile.petTypeId);
             return View(petFile);
         }
@@ -167,7 +173,7 @@ namespace HealthyPawsV2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name", petFile.petBreedId);
-            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.dueno);
+            ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.Owner);
             ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name", petFile.petTypeId);
             return View(petFile);
         }

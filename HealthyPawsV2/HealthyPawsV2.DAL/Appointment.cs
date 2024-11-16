@@ -19,7 +19,7 @@ namespace HealthyPawsV2.DAL
         [ForeignKey("PetFile")]
         [Required]
         [DisplayName("ID Mascota")]
-        public int petFileId { get; set; }  //PetFileID
+        public int petFileId { get; set; }
 
         [Required]
         [DisplayName("ID de Veterinario")]
@@ -50,7 +50,7 @@ namespace HealthyPawsV2.DAL
 
         public ApplicationUser? owner { get; set; }
 
-        public ApplicationUser? veterinario { get; set; }
+        public ApplicationUser? vet { get; set; }
 
         public ICollection<AppointmentInventory> AppointmentInventories { get; set; } = new List<AppointmentInventory>();
         public ICollection<Document> Documents { get; set; } = new List<Document>();
