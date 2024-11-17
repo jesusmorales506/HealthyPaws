@@ -38,7 +38,9 @@ namespace HealthyPawsV2.Controllers
             if (!string.IsNullOrEmpty(searchPetFile))
             {
                 int.TryParse(searchPetFile, out int parsedPetFileId);
-                pets = pets.Where(p => p.name.Contains(searchPetFile) || p.petFileId == parsedPetFileId);
+                pets = pets.Where(p => p.name.Contains(searchPetFile) || 
+                p.Owner.name.Contains(searchPetFile) || 
+                p.petFileId == parsedPetFileId);
             }
 
             var hpContext = await pets.ToListAsync();
