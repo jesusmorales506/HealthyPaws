@@ -12,7 +12,7 @@
         <h5 class="card-title">Documento</h5>
         <hr />
 
-        <form asp-action="Edit">
+        <form enctype="multipart/form-data" asp-controller="Documents" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="documentId" />
 
@@ -52,7 +52,9 @@
                     @Html.DisplayNameFor(model => model.fileType)
                 </dt>
                 <dd class="col-sm-9">
-                    <input asp-for="fileType" class="form-control" />
+                    <input type="file" id="fileType" name="File" class="form-control" accept="image/png, image/jpeg, application/pdf,
+                                    application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                    application/vnd.ms-excel" /> 
                     <span asp-validation-for="fileType" class="text-danger"></span>
                 </dd>
 
@@ -79,8 +81,3 @@
     </div>
 </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

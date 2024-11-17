@@ -25,7 +25,7 @@ namespace HealthyPawsV2.Controllers
         // GET: Documents
         public async Task<IActionResult> Index()
         {
-            
+
 
             ViewData["AppointmentId"] = new SelectList(
             from appointment in _context.Appointments
@@ -35,25 +35,26 @@ namespace HealthyPawsV2.Controllers
             {
                 AppointmentId = appointment.AppointmentId,
                 DisplayText = $"{appointment.AppointmentId} - {petFile.name} - {user.name} - {user.idNumber}  "
-             },
-            "AppointmentId", 
-            "DisplayText"    
+            },
+            "AppointmentId",
+            "DisplayText"
             );
 
             ViewData["petFileName"] = new SelectList(
             from pf in _context.PetFiles
             select new SelectListItem
             {
-                Value = pf.petFileId.ToString(), 
-                Text = $"{pf.petFileId} - {pf.name}"  
+                Value = pf.petFileId.ToString(),
+                Text = $"{pf.petFileId} - {pf.name}"
             },
-                "Value",  
-                "Text"    
+                "Value",
+                "Text"
                 );
 
 
             //ViewBag.petFileId = new SelectList(petFiles, "Value", "Text");
-
+            ViewData["AppointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId");
+            ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "petFileId");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
 
             return View(await _context.Documents.ToListAsync());
@@ -144,7 +145,7 @@ namespace HealthyPawsV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,documentId,petFileId,name,category,fileType,status")] Document document)
+        public async Task<IActionResult> Edit(int id, [Bind("documentId, AppointmentId, petFileId, name, category, fileType, status")] Document document, IFormFile File)
         {
             if (id != document.documentId)
             {
@@ -155,6 +156,29 @@ namespace HealthyPawsV2.Controllers
             {
                 try
                 {
+                   
+                    if (File != null && File.Length > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await File.CopyToAsync(memoryStream);
+                            document.fileType = memoryStream.ToArray();
+                        }
+                    }
+                    else
+                    {
+                        
+                        var existingDocument = await _context.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.documentId == id);
+                        if (existingDocument != null)
+                        {
+                            document.fileType = existingDocument.fileType;  
+                        }
+                    }
+
+                    
+                    _context.Entry(document).State = EntityState.Detached;
+
+                    
                     _context.Update(document);
                     await _context.SaveChangesAsync();
                 }
@@ -179,6 +203,15 @@ namespace HealthyPawsV2.Controllers
 
             return View(document);
         }
+
+
+
+        private bool DocumentExists(int id)
+        {
+            return _context.Documents.Any(e => e.documentId == id);
+        }
+
+
 
         // GET: Documents/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -213,10 +246,7 @@ namespace HealthyPawsV2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DocumentExists(int id)
-        {
-            return _context.Documents.Any(e => e.documentId == id);
-        }
+        
 
 
         //This is to download the files
