@@ -48,30 +48,5 @@ namespace HealthyPawsV2.DAL
 
         public ICollection<AppointmentInventory> AppointmentInventories { get; set; } = new List<AppointmentInventory>();
 
-         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
