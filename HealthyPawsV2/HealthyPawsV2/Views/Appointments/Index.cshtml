@@ -58,9 +58,11 @@
                 <td>@Html.DisplayFor(modelItem => item.diagnostic)</td>
                 <td>@Html.DisplayFor(modelItem => item.Additional)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm" style="margin-bottom: 3%">Editar</a>
-                    <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm" style="margin-bottom: 3%">Detalles</a>
+                    <div class="d-flex" style="gap: 5px; margin-top: 2%">
+                    <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm" >Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm" >Detalles</a>
                     <a class="btn btn-danger btn-sm" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
+                    </div>
                 </td>
             </tr>
         }
@@ -151,7 +153,7 @@
 
                             <br />
                             <div class="form-group">
-                                <input type="submit" value="Crear" class="btn btn-primary" />
+                                <input type="submit" value="Crear" class="btn colorButton" />
                             </div>
                         </form>
                     </div>

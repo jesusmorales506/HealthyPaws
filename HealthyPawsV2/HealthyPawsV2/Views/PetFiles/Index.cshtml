@@ -62,9 +62,12 @@
                 <td>@Html.DisplayFor(modelItem => item.creationDate)</td>
                 <td>@Html.DisplayFor(modelItem => item.vaccineHistory)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.petFileId" class="btn btn-primary btn-sm">Editar</a>
-                    <a asp-action="Details" asp-route-id="@item.petFileId" class="btn btn-secondary btn-sm">Detalles</a>
-                    <a class="btn btn-danger BorrarElemento" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
+                    <div class="d-flex" style="gap: 5px; margin-top: 2%">
+                        <a asp-action="Edit" asp-route-id="@item.petFileId" class="btn btn-primary btn-sm" >Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.petFileId" class="btn btn-secondary btn-sm">Detalles</a>
+                        <a class="btn btn-danger btn-sm BorrarElemento" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
+                    </div>
+
                 </td>
             </tr>
         }
@@ -184,7 +187,7 @@
 
                             <br />
                             <div class="form-group">
-                                <input type="submit" value="Crear" class="btn btn-primary" />
+                                <input type="submit" value="Crear" class="btn colorButton" />
                             </div>
                         </form>
                     </div>
