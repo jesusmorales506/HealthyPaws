@@ -233,10 +233,9 @@ else
 <table class="table table-bordered">
     <thead class="color">
         <tr>
-                <th class="text-white">Nombre de la Mascota </th>
             <th class="text-white">Nombre del Documento/Examen</th>
             <th class="text-white">Categoria</th>
-            @* <th class="text-white">Tipo de Archivo</th> *@
+            <th class="text-white">Tipo de Archivo</th>
             <th class="text-white">Estado</th>
         </tr>
     </thead>
@@ -244,10 +243,9 @@ else
         @foreach (var document in Documents)
         {
             <tr>
-                    <td>@Html.DisplayFor(modelItem => document.PetFile.name)</td>
                 <td>@Html.DisplayFor(modelItem => document.name)</td>
                 <td>@Html.DisplayFor(modelItem => document.category)</td>
-                @* <td>@Html.DisplayFor(modelItem => document.fileType)</td> *@
+                <td>@Html.DisplayFor(modelItem => document.fileType)</td>
                 <td>@Html.DisplayFor(modelItem => document.status)</td>
             </tr>
         }
