@@ -7,6 +7,23 @@
     var Documents = ViewBag.Documents as IEnumerable<HealthyPawsV2.DAL.Document>;
 }
 
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto; font-size:23px; padding-bottom:20px; color: rgba(178,90,40,0.8);">
+        <strong>¡Búsqueda General! </strong> <br /> Encuentra información de cualquier apartado.
+    </div>
+</div>
+
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-controller="Home" asp-action="Search" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="GlobalSearch" name="GlobalSearch" class="form-control rounded-input" placeholder="Buscar..." />
+            </div>
+        </form>
+    </div>
+</div>
+
+
 @* This is the Filter for Types *@
 @if (ViewBag.NoResultadosPetTypes)
 {
