@@ -31,10 +31,10 @@
 	</div>
 </div>
 
-@if ((bool)ViewBag.NoResultados)
+@* @if ((bool)ViewBag.NoResultados)
 {
 	<p>No se encuentran resultados de búsqueda.</p>
-}
+} *@
 <br />
 <br />
 <div id="alertContainer" class="alert" style="display:none;"></div>
@@ -180,6 +180,14 @@
 		});
 	</script>
 }
+
+@* <!--In case there is no Pets under the name looked-->
+@if ((bool)ViewBag.NoResultados)
+{
+	<p>No se encuentran resultados de búsqueda.</p>
+}
+<br />
+<br /> *@
 
 
 

@@ -5,6 +5,7 @@ using HealthyPawsV2.DAL;
 using HealthyPawsV2.Utils;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
+using System.Drawing;
 
 
 public class UserController : Controller
@@ -21,11 +22,23 @@ public class UserController : Controller
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> Index()
+	public async Task<IActionResult> Index(string userSearch)
 	{
-		var usuarios = await _userManager.Users.ToListAsync();
+		var usuarios =  _userManager.Users.AsQueryable();
 
-		if (usuarios != null && usuarios.Count == 0)
+		if (!string.IsNullOrEmpty(userSearch))
+		{
+			usuarios = usuarios.Where(p => p.name.Contains(userSearch) ||
+			p.surnames.Contains(userSearch) || p.phone1.Contains(userSearch) || p.phone2.Contains(userSearch)
+			|| p.phone3.Contains(userSearch) || p.Email.Contains(userSearch) || p.idNumber.Contains(userSearch) || p.Id.Contains(userSearch));
+		}
+
+		var userResult = await usuarios.ToListAsync();
+
+
+		//usuarios = await usuarios.ToListAsync();
+
+		if (usuarios != null)
 		{
 			ViewData["NoResultados"] = true;
 		}
@@ -35,7 +48,7 @@ public class UserController : Controller
 		}
 		ViewBag.Roles = await RolesUtils.GetAllRoles(_roleManager);
 
-		return View(usuarios);
+		return View(userResult);
 	}
 
 	public async Task<IActionResult> Details(string id)

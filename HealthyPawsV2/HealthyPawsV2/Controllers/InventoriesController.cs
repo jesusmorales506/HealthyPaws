@@ -28,7 +28,8 @@ namespace HealthyPawsV2.Controllers
             if (!string.IsNullOrEmpty(searchInventory))
             {
                 int.TryParse(searchInventory, out int parseditemId);
-                inventaries = inventaries.Where(p => p.name.Contains(searchInventory) || p.inventoryId == parseditemId);
+                inventaries = inventaries.Where(p => p.name.Contains(searchInventory) ||p.provider.Contains(searchInventory) ||
+                p.category.Contains(searchInventory) ||p.inventoryId == parseditemId);
             }
             var hpContext = await inventaries.ToListAsync();
 
