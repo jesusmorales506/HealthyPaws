@@ -22,12 +22,21 @@ namespace HealthyPawsV2.Controllers
 
         }
 
-        // GET: Documents
-        public async Task<IActionResult> Index()
+		// GET: Documents
+		[HttpGet]
+		public async Task<IActionResult> Index(string documentSearch)
         {
 
+            var documents = _context.Documents.AsQueryable();
 
-            ViewData["AppointmentId"] = new SelectList(
+			if (!string.IsNullOrEmpty(documentSearch))
+			{
+				documents = documents.Where(m => m.name.Contains(documentSearch));
+			}
+
+            var documentResult = await documents.ToListAsync();
+
+			ViewData["AppointmentId"] = new SelectList(
             from appointment in _context.Appointments
             join petFile in _context.PetFiles on appointment.petFileId equals petFile.petFileId
             join user in _context.ApplicationUser on petFile.ownerId equals user.Id
@@ -57,7 +66,7 @@ namespace HealthyPawsV2.Controllers
             ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "petFileId");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
 
-            return View(await _context.Documents.ToListAsync());
+            return View(documentResult);
         }
 
         // GET: Documents/Details/5
@@ -228,8 +237,10 @@ namespace HealthyPawsV2.Controllers
                 return NotFound();
             }
 
-            return View(document);
-        }
+			document.status = false;
+			await _context.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
+		}
 
         // POST: Documents/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -242,9 +253,10 @@ namespace HealthyPawsV2.Controllers
                 _context.Documents.Remove(document);
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+			document.status = false;
+			await _context.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
+		}
 
         
 

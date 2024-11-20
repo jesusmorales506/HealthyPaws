@@ -31,7 +31,6 @@ namespace HealthyPawsV2.Controllers
                 .Include(p => p.Owner)
                 .Include(p => p.PetBreed)
                 .ThenInclude(b => b.PetType)
-                .Where(p => p.status)
                 .AsQueryable();
 
             //This the Search Bar

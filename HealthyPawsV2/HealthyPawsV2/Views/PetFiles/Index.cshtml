@@ -65,7 +65,7 @@
                     <div class="d-flex" style="gap: 5px; margin-top: 2%">
                         <a asp-action="Edit" asp-route-id="@item.petFileId" class="btn btn-primary btn-sm" >Editar</a>
                         <a asp-action="Details" asp-route-id="@item.petFileId" class="btn btn-secondary btn-sm">Detalles</a>
-                        <a class="btn btn-danger btn-sm BorrarElemento" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
+                        <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
                     </div>
 
                 </td>

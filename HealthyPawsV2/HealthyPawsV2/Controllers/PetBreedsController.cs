@@ -23,7 +23,6 @@ namespace HealthyPawsV2.Controllers
         {
             var petBreedsQuery = _context.PetBreeds
                 .Include(r => r.PetType)
-                .Where(p => p.status)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchPetBreed))
