@@ -43,6 +43,12 @@ namespace HealthyPawsV2.Controllers
                 ViewBag.NoResultados = false;
             }
 
+            // Cargar opciones de medicamentos
+            ViewData["Medicamentos"] = new SelectList(_context.Inventories
+                .Where(i => i.category == "Medicamento"), "inventoryId", "name");
+
+            ViewData["Citas"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId");
+
             return View(hpContext);
         }
 
@@ -121,11 +127,7 @@ namespace HealthyPawsV2.Controllers
             ViewData["appointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId", appointmentInventory.appointmentId);
             ViewData["inventoryID"] = new SelectList(_context.Inventories, "inventoryId", "brand", appointmentInventory.inventoryID);
 
-
-
-
-
-            return View();
+            return View(appointmentInventory);
         }
 
         // POST: AppointmentInventories/Edit/5

@@ -37,17 +37,17 @@
 
             <div class="form-group">
                 <label asp-for="measuredose" class="control-label"></label>
-                <input asp-for="measuredose" class="form-control" />
+                <select asp-for="measuredose" class="form-control">
+                    <option value="mg">mg</option>
+                    <option value="ml">ml</option>
+                    <option value="gr">gr</option>
+                    <option value="oz">oz</option>
+                </select>
                 <span asp-validation-for="measuredose" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="status" /> @Html.DisplayNameFor(model => model.status)
-                </label>
-            </div>
-
+            <br />
             <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn colorButton" />
             </div>
         </form>
     </div>
