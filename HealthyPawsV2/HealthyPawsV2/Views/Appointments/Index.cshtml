@@ -61,7 +61,7 @@
                     <div class="d-flex" style="gap: 5px; margin-top: 2%">
                     <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm" >Editar</a>
                     <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm" >Detalles</a>
-                    <a class="btn btn-danger btn-sm" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
+                        <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
                     </div>
                 </td>
             </tr>
@@ -165,5 +165,12 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
 
 
