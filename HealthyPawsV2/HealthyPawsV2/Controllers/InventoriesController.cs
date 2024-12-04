@@ -48,7 +48,24 @@ namespace HealthyPawsV2.Controllers
 
 
         }
+        //--------------------------------------------------------------------------------------
 
+        // GET: Notifications
+        public async Task<IActionResult> Notifications( )
+        {
+            var inventaries = _context.Inventories.AsQueryable();
+            var inventariesResult = await inventaries.ToListAsync();
+
+            var appointments = _context.Appointments.AsQueryable();
+            var appointmentResult = await appointments.ToListAsync();
+
+            ViewBag.Appointment = appointments;
+            ViewBag.Inventory = inventaries;
+
+            return View();
+        }
+
+        //--------------------------------------------------------------------------------------
         // GET: Inventories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
