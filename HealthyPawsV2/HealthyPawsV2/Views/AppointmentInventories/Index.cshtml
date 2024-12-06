@@ -20,7 +20,10 @@
 <!--This is the Create button-->
 <div class="row ">
     <div class="col-md-6">
-        <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AgregarMedicinaEnCita">Agregar Medicamento en la Cita</button>
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AgregarMedicinaEnCita">Agregar Medicamento en la Cita</button>
+        }
     </div>
 
 
@@ -51,9 +54,12 @@
                 <td>@Html.DisplayFor(modelItem => item.Appointment.AppointmentId)</td>
                 <td>@Html.DisplayFor(modelItem => item.status)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.appointmentInventoryId" class="btn btn-primary btn-sm">Editar</a>
                     <a asp-action="Details" asp-route-id="@item.appointmentInventoryId" class="btn btn-secondary btn-sm">Detalles</a>
-                    <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.appointmentInventoryId">Eliminar</a>
+                    @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.appointmentInventoryId" class="btn btn-primary btn-sm">Editar</a>
+                        <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.appointmentInventoryId">Eliminar</a>
+                    }
                 </td>
             </tr>
         }

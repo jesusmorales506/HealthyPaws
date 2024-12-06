@@ -69,7 +69,10 @@
 <!--This is the Button that we use to Create New Documents-->
 <div class="row ">
     <div class="col-md-6">
-        <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AbrirExamen">Añadir Examen</button>
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AbrirExamen">Añadir Examen</button>
+        }
     </div>
 </div>
 
@@ -138,9 +141,13 @@
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.status)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.documentId" class="btn btn-primary btn-sm">Editar</a>
                     <a asp-action="Details" asp-route-id="@item.documentId" class="btn btn-secondary btn-sm">Detalles</a>
-                    <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.documentId">Eliminar</a>
+
+                    @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.documentId" class="btn btn-primary btn-sm">Editar</a>
+                        <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.documentId">Eliminar</a>
+                    }
                 </td>
             </tr>
         }

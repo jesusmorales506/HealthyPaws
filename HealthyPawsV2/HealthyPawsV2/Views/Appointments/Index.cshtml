@@ -24,7 +24,10 @@
 
 <div class="row">
     <div class="col-md-6">
-        <button type="button" class="btn  colorButton" data-bs-toggle="modal" data-bs-target="#AddAppointment" >Crear Cita</button>
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <button type="button" class="btn  colorButton" data-bs-toggle="modal" data-bs-target="#AddAppointment" >Crear Cita</button>
+        }
     </div>
 </div>
 <br />
@@ -59,9 +62,13 @@
                 <td>@Html.DisplayFor(modelItem => item.Additional)</td>
                 <td>
                     <div class="d-flex" style="gap: 5px; margin-top: 2%">
-                    <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm" >Editar</a>
-                    <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm" >Detalles</a>
-                        <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
+                        <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm">Detalles</a>
+
+                        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm" >Editar</a>
+                            <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
+                        }
                     </div>
                 </td>
             </tr>
