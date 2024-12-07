@@ -67,6 +67,14 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <br />
+            @if (!Model.status)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="reactivateUser" name="reactivateUser" value="true" />
+                    <label class="form-check-label" for="reactivateUser">Reactivar Usuario</label>
+                </div>
+            }
+            <br />
             <div class="form-group">
                 <input type="submit" value="Editar" class="btn colorButton" />
             </div>

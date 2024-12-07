@@ -22,31 +22,33 @@ public class UserController : Controller
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> Index(string userSearch)
+	public async Task<IActionResult> Index(string userSearch, string statusFilter = "active")
 	{
-		var usuarios =  _userManager.Users.AsQueryable();
+		var users = _userManager.Users.AsQueryable();
 
+		// Filter by search
 		if (!string.IsNullOrEmpty(userSearch))
 		{
-			usuarios = usuarios.Where(p => p.name.Contains(userSearch) ||
+			users = users.Where(p => p.name.Contains(userSearch) ||
 			p.surnames.Contains(userSearch) || p.phone1.Contains(userSearch) || p.phone2.Contains(userSearch)
 			|| p.phone3.Contains(userSearch) || p.Email.Contains(userSearch) || p.idNumber.Contains(userSearch) || p.Id.Contains(userSearch));
 		}
 
-		var userResult = await usuarios.ToListAsync();
-
-
-		//usuarios = await usuarios.ToListAsync();
-
-		if (usuarios != null)
+		// Filter by status
+		if (statusFilter == "active")
 		{
-			ViewData["NoResultados"] = true;
+			users = users.Where(u => u.status == true);
 		}
-		else
+		else if (statusFilter == "inactive")
 		{
-			ViewData["NoResultados"] = false;
+			users = users.Where(u => u.status == false);
 		}
-		ViewBag.Roles = await RolesUtils.GetAllRoles(_roleManager);
+
+		var userResult = await users.ToListAsync();
+
+		ViewData["NoResultados"] = userResult.Count == 0;
+		ViewData["UserSearch"] = userSearch;
+		ViewData["StatusFilter"] = statusFilter;
 
 		return View(userResult);
 	}
@@ -180,7 +182,7 @@ public class UserController : Controller
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Edit(string id, ApplicationUser usuario)
+	public async Task<IActionResult> Edit(string id, ApplicationUser usuario, bool reactivateUser)
 	{
 		if (id != usuario.Id)
 		{
@@ -197,15 +199,21 @@ public class UserController : Controller
 					return NotFound();
 				}
 
-				userToUpdate.name = usuario.name;
+                // Update user details
+                userToUpdate.name = usuario.name;
 				userToUpdate.surnames = usuario.surnames;
 				userToUpdate.phone1 = usuario.phone1;
 				userToUpdate.phone2 = usuario.phone2;
 				userToUpdate.phone3 = usuario.phone3;
 				userToUpdate.Email = usuario.Email;
 
+                // Check if reactivation is requested
+                if (reactivateUser && !userToUpdate.status)
+                {
+                    userToUpdate.status = true;
+                }
 
-				var result = await _userManager.UpdateAsync(userToUpdate);
+                var result = await _userManager.UpdateAsync(userToUpdate);
 				if (!result.Succeeded)
 				{
 
@@ -220,8 +228,9 @@ public class UserController : Controller
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-
-			}
+                ModelState.AddModelError(string.Empty, "No se pudieron guardar los cambios.");
+                return View(usuario);
+            }
 			return RedirectToAction(nameof(Index));
 		}
 		return View(usuario);
