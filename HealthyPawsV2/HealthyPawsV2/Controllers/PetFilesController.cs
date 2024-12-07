@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
 using Microsoft.AspNetCore.Identity;
 using HealthyPawsV2.Utils;
+using System.Security.Claims;
 
 namespace HealthyPawsV2.Controllers
 {
@@ -27,11 +28,26 @@ namespace HealthyPawsV2.Controllers
         // GET: PetFiles
         public async Task<IActionResult> Index(string searchPetFile)
         {
+            //Get logged user
+            var userIdentity = User.Identity as ClaimsIdentity;
+            var loggedUserTask = RolesUtils.GetLoggedUser(_userManager, new ClaimsPrincipal(userIdentity));
+            loggedUserTask.Wait();
+            var loggedUser = loggedUserTask.Result;
+
+            //list pets
             var pets = _context.PetFiles
                 .Include(p => p.Owner)
                 .Include(p => p.PetBreed)
                 .ThenInclude(b => b.PetType)
                 .AsQueryable();
+
+            //list pets ONLY of logged user
+            if (User.IsInRole("User"))
+            {
+                pets = pets
+                    .Where(m => m.ownerId == loggedUser.Id)
+                    .AsQueryable();
+            }
 
             //This the Search Bar
             if (!string.IsNullOrEmpty(searchPetFile))

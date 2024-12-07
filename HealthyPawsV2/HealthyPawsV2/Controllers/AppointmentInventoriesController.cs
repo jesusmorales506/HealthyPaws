@@ -8,24 +8,45 @@ using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
 using System.Drawing;
 using System.Drawing.Imaging;
+using HealthyPawsV2.Utils;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace HealthyPawsV2.Controllers
 {
     public class AppointmentInventoriesController : Controller
     {
         private readonly HPContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AppointmentInventoriesController(HPContext context)
+        public AppointmentInventoriesController(HPContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: AppointmentInventories
         public async Task<IActionResult> Index(string searchInvApp)
         {
+            //Get logged user
+            var userIdentity = User.Identity as ClaimsIdentity;
+            var loggedUserTask = RolesUtils.GetLoggedUser(_userManager, new ClaimsPrincipal(userIdentity));
+            loggedUserTask.Wait();
+            var loggedUser = loggedUserTask.Result;
+
             var invApp = _context.AppointmentInventories
               .Include(p => p.Appointment)
               .Include(p => p.Inventory).AsQueryable();
+
+            //list medications ONLY of logged user
+            if (User.IsInRole("User"))
+            {
+                invApp = invApp
+                    .Where(m => m.Appointment.ownerId == loggedUser.Id)
+                    .AsQueryable();
+            }
 
             if (!string.IsNullOrEmpty(searchInvApp))
             {

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
 using Microsoft.AspNetCore.Identity;
 using HealthyPawsV2.Utils;
+using System.Security.Claims;
+using System.Drawing;
 
 namespace HealthyPawsV2.Controllers
 {
@@ -27,11 +29,27 @@ namespace HealthyPawsV2.Controllers
         // GET: Appointments
         public async Task<IActionResult> Index(string searchAppointment)
         {
+            //Get logged user
+            var userIdentity = User.Identity as ClaimsIdentity;
+            var loggedUserTask = RolesUtils.GetLoggedUser(_userManager, new ClaimsPrincipal(userIdentity));
+            loggedUserTask.Wait();
+            var loggedUser = loggedUserTask.Result;
+
+            //list Appts
             var appointments = _context.Appointments
                 .Include(a => a.PetFile)
                 .Include(a => a.owner)
                 .Include(a => a.vet)
                 .AsQueryable();
+
+
+            //list pets ONLY of logged user
+            if (User.IsInRole("User"))
+            {
+                appointments = appointments
+                    .Where(m => m.ownerId == loggedUser.Id)
+                    .AsQueryable();
+            }
 
             if (!string.IsNullOrEmpty(searchAppointment))
             {

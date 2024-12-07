@@ -7,29 +7,49 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HealthyPawsV2.DAL;
 using Microsoft.AspNetCore.Identity;
+using HealthyPawsV2.Utils;
+using System.Security.Claims;
+using System.Drawing;
 
 namespace HealthyPawsV2.Controllers
 {
     public class DocumentsController : Controller
     {
         private readonly HPContext _context;
-        
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public DocumentsController(HPContext context)
+
+        public DocumentsController(HPContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
-            
-
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
 		// GET: Documents
 		[HttpGet]
 		public async Task<IActionResult> Index(string documentSearch)
         {
+            //Get logged user
+            var userIdentity = User.Identity as ClaimsIdentity;
+            var loggedUserTask = RolesUtils.GetLoggedUser(_userManager, new ClaimsPrincipal(userIdentity));
+            loggedUserTask.Wait();
+            var loggedUser = loggedUserTask.Result;
 
-            var documents = _context.Documents.AsQueryable();
+            var documents = _context.Documents
+                .Include(d => d.PetFile)
+                .AsQueryable();
 
-			if (!string.IsNullOrEmpty(documentSearch))
+            //list documents ONLY of logged user
+            if (User.IsInRole("User"))
+            {
+                documents = documents
+                    .Where(m => m.PetFile.ownerId == loggedUser.Id)
+                    .AsQueryable();
+            }
+
+            if (!string.IsNullOrEmpty(documentSearch))
 			{
 				documents = documents.Where(m => m.name.Contains(documentSearch));
 			}
