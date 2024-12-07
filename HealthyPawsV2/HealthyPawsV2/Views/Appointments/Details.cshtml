@@ -26,7 +26,14 @@
             </dt>
             <dd class="col-sm-9">
                 @Html.DisplayFor(model => model.petFileId)
-            </dd> 
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ownerId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.owner.name)
+            </dd>
 
             <dt class="col-sm-3">
                 @Html.DisplayNameFor(model => model.vetId)
@@ -68,13 +75,6 @@
             </dt>
             <dd class="col-sm-9">
                 @Html.DisplayFor(model => model.Additional)
-            </dd>
-
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.ownerId)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.owner.name)
             </dd>
         </dl>
     </div>
