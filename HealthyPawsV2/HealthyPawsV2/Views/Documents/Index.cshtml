@@ -61,6 +61,14 @@
             <div class="form-group mr-2">
                 <input type="text" id="documentSearch" name="documentSearch" class="form-control rounded-input" placeholder="Buscar Documento..." />
             </div>
+            <br/>
+            <label class="toggle-label" for="fileTypeFilter">Mostrar:</label>
+            <select id="fileTypeFilter" name="fileTypeFilter" asp-for="@ViewData["FileTypeFilter"]" class="form-select" onchange="this.form.submit()" style="display: inline-block; width: auto;">
+                <option value="">Todos los formatos</option>
+                <option value="image">Imágenes</option>
+                <option value="pdf">PDFs</option>
+                <option value="word">Documentos Word</option>
+            </select>
         </form>
     </div>
 </div>

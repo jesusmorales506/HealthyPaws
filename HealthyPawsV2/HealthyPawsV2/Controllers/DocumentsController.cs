@@ -29,7 +29,7 @@ namespace HealthyPawsV2.Controllers
 
 		// GET: Documents
 		[HttpGet]
-		public async Task<IActionResult> Index(string documentSearch)
+		public async Task<IActionResult> Index(string documentSearch, string fileTypeFilter)
         {
             //Get logged user
             var userIdentity = User.Identity as ClaimsIdentity;
@@ -53,6 +53,20 @@ namespace HealthyPawsV2.Controllers
 			{
 				documents = documents.Where(m => m.name.Contains(documentSearch));
 			}
+
+            // Filter by file type
+            if (!string.IsNullOrEmpty(fileTypeFilter))
+            {
+                documents = documents.Where(d =>
+                    (fileTypeFilter == "image" &&
+                        (d.fileType[0] == 0xFF && d.fileType[1] == 0xD8 ||
+                         d.fileType[0] == 0x89 && d.fileType[1] == 0x50 && d.fileType[2] == 0x4E && d.fileType[3] == 0x47)) ||
+                    (fileTypeFilter == "pdf" &&
+                        d.fileType[0] == 0x25 && d.fileType[1] == 0x50 && d.fileType[2] == 0x44 && d.fileType[3] == 0x46) ||
+                    (fileTypeFilter == "word" &&
+                        d.fileType[0] == 0x50 && d.fileType[1] == 0x4B && d.fileType[2] == 0x03 && d.fileType[3] == 0x04)
+                );
+            }
 
             var documentResult = await documents.ToListAsync();
 
@@ -85,6 +99,7 @@ namespace HealthyPawsV2.Controllers
             ViewData["AppointmentId"] = new SelectList(_context.Appointments, "AppointmentId", "AppointmentId");
             ViewData["petFileId"] = new SelectList(_context.PetFiles, "petFileId", "petFileId");
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
+            ViewData["FileTypeFilter"] = fileTypeFilter;
 
             return View(documentResult);
         }
