@@ -150,12 +150,40 @@ namespace HealthyPawsV2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AppointmentId,petFileId,vetId,ownerId,Date,description,status,diagnostic,Additional")] Appointment appointment)
         {
-           
-            appointment.diagnostic = "Aun no hay Diagnostico"; // I Added this just to add Something
-            // Verificar si la fecha de la cita es anterior a la fecha actual
+
+            // Validación: No se permiten citas antes de las 7am o después de las 6pm, de lunes a sábado. Domingos no hay citas.
+            bool EsDomingo(DateTime fecha) => fecha.DayOfWeek == DayOfWeek.Sunday;
+            bool EsHorarioLaboral(DateTime fecha) =>
+                fecha.TimeOfDay >= TimeSpan.FromHours(7) && fecha.TimeOfDay <= TimeSpan.FromHours(18);
+
+            if (EsDomingo(appointment.Date) || !EsHorarioLaboral(appointment.Date))
+            {
+                ModelState.AddModelError("Date", "No se pueden programar citas los días Domingo ni los días de Lunes a Sábado antes de las 7 am y después de las 6 pm");
+            }
+
+            // Validación: Verificar si el veterinario ya tiene una cita en el mismo horario
+            var existingAppointment = await _context.Appointments
+                .Where(a => a.vetId == appointment.vetId && a.Date == appointment.Date)
+                .FirstOrDefaultAsync();
+
+            if (existingAppointment != null)
+            {
+                ModelState.AddModelError("Date", "El veterinario ya tiene una cita asignada en el mismo horario");
+            }
+
+            // Validación de fecha en el pasado
             if (appointment.Date < DateTime.Now)
             {
-                ModelState.AddModelError("date", "La fecha de la cita no puede ser anterior a la fecha actual.");
+                ModelState.AddModelError("Date", "La fecha de la cita no puede ser anterior a la fecha actual");
+            }
+
+            if (ModelState.IsValid)
+            {
+                appointment.status = "Agendada";
+                appointment.diagnostic = "Aun no hay Diagnostico"; // Diagnóstico inicial
+                _context.Add(appointment);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
             if (ModelState.IsValid)
