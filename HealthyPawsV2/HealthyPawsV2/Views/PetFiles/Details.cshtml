@@ -105,7 +105,9 @@
     </div>
 
     <div class="card-footer">
+         @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet"))){
         <a asp-action="Edit" asp-route-id="@Model?.petFileId" class="btn colorButton">Editar</a>
+         }
         <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
     </div>
 </div>
