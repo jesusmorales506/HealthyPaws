@@ -18,7 +18,11 @@
                 @Html.DisplayNameFor(model => model.ownerId)
             </dt>
             <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.ownerId)
+                @{
+                    var owners = ViewData["Owners"] as IEnumerable<SelectListItem>;
+                    var ownerName = owners?.FirstOrDefault(o => o.Value == Model.ownerId)?.Text ?? "Unknown Owner";
+                }
+                @ownerName
             </dd>
 
             <dt class="col-sm-3">

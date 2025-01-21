@@ -82,6 +82,15 @@ namespace HealthyPawsV2.Controllers
         // GET: PetFiles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var ownersTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "User");
+            ownersTask.Wait();
+            var owners = ownersTask.Result;
+            var ownerList = owners.Select(user => new
+            {
+                Id = user.Id, // AppUser "Id" Relation
+                DisplayName = $"{user.name} {user.surnames}"}).ToList();
+            ViewData["Owners"] = new SelectList(ownerList, "Id", "DisplayName");
+
             if (id == null)
             {
                 return NotFound();
@@ -144,6 +153,16 @@ namespace HealthyPawsV2.Controllers
         // GET: PetFiles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var ownersTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "User");
+            ownersTask.Wait();
+            var owners = ownersTask.Result;
+            var ownerList = owners.Select(user => new
+            {
+                Id = user.Id, // AppUser "Id" Relation
+                DisplayName = $"{user.name} {user.surnames} - {user.idNumber}" // idNumber to display personal id of the user
+            }).ToList();
+            ViewData["Owners"] = new SelectList(ownerList, "Id", "DisplayName");
+
             if (id == null)
             {
                 return NotFound();

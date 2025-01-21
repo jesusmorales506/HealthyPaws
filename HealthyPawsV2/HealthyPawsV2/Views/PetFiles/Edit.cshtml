@@ -25,7 +25,9 @@
 
             <div class="form-group">
                 <label asp-for="ownerId" class="control-label"></label>
-                <input asp-for="ownerId" class="form-control" />
+                <select asp-for="ownerId" class="form-control" asp-items="ViewBag.Owners">
+                    <option value="" disabled selected>Seleccione al Dueño</option>
+                </select>
                 <span asp-validation-for="ownerId" class="text-danger"></span>
             </div>
 
