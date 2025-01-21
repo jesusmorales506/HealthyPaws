@@ -116,6 +116,16 @@ namespace HealthyPawsV2.Controllers
         // GET: Appointments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var vetsTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "Vet");
+            vetsTask.Wait();
+            var vets = vetsTask.Result.Where(v => v.status);
+            var vetList = vets.Select(vet => new
+            {
+                Id = vet.Id,
+                DisplayName = $"{vet.name} {vet.surnames}"
+            }).ToList();
+            ViewData["Vets"] = new SelectList(vetList, "Id", "DisplayName");
+
             if (id == null)
             {
                 return NotFound();
@@ -203,6 +213,16 @@ namespace HealthyPawsV2.Controllers
         // GET: Appointments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var vetsTask = RolesUtils.GetUsersPerRole(_roleManager, _userManager, "Vet");
+            vetsTask.Wait();
+            var vets = vetsTask.Result.Where(v => v.status);
+            var vetList = vets.Select(vet => new
+            {
+                Id = vet.Id,
+                DisplayName = $"{vet.name} {vet.surnames}"
+            }).ToList();
+            ViewData["Vets"] = new SelectList(vetList, "Id", "DisplayName");
+
             if (id == null)
             {
                 return NotFound();

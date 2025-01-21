@@ -39,8 +39,13 @@
                 @Html.DisplayNameFor(model => model.vetId)
             </dt>
             <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.vetId)
+                @{
+                    var vets = ViewData["Vets"] as IEnumerable<SelectListItem>;
+                    var vetName = vets?.FirstOrDefault(v => v.Value == Model.vetId)?.Text ?? "Unknown Vet";
+                }
+                @vetName
             </dd>
+
 
             <dt class="col-sm-3">
                 @Html.DisplayNameFor(model => model.Date)
