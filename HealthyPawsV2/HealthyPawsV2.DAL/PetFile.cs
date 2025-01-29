@@ -34,9 +34,11 @@ namespace HealthyPawsV2.DAL
         public string gender { get; set; }
 
         [DisplayName("Edad")]
+        [Range(0,100, ErrorMessage = "La edad tiene que ser entre 0 a 100 años")]
         public int age { get; set; }
 
         [DisplayName("Peso")]
+        [Range(0, 1000, ErrorMessage = "El peso tiene que ser entre 0 a 1000 Kg")]
         public double weight { get; set; }
 
 

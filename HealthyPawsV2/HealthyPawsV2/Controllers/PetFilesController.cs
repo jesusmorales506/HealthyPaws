@@ -144,7 +144,8 @@ namespace HealthyPawsV2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name", petFile.petBreedId);
+           // ViewData["petBreedId"] = new SelectList(_context.PetBreeds, "petBreedId", "name", petFile.petBreedId);
+            ViewData["petBreedId"] = new SelectList(_context.PetBreeds.Where(t => t.petTypeId == petFile.petTypeId), "petBreedId", "name", petFile.petBreedId);
             ViewData["Users"] = new SelectList(_context.ApplicationUser, "Id", "name", petFile.Owner);
             ViewData["petTypeId"] = new SelectList(_context.PetTypes, "petTypeId", "name", petFile.petTypeId);
             return View(petFile);
